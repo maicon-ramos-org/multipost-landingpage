@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: "Robô MultiPost — Agendador de Redes Sociais Self-Hosted com IA",
+  title: "Robô MultiPost — Domine Todas as Redes Sociais com IA",
   description:
-    "Automatize suas postagens em 33+ redes sociais com IA integrada, Docker e compatibilidade com n8n. Controle total, sem mensalidade. Curso completo por R$297.",
+    "Agende posts em 33+ redes sociais com IA integrada, Docker e n8n. Self-hosted, sem mensalidade, controle total. Curso completo por R$297.",
   keywords: [
     "agendador de redes sociais",
     "automação redes sociais",
@@ -18,12 +21,12 @@ export const metadata: Metadata = {
     "IA",
     "inteligência artificial",
     "postiz",
-    "social media",
+    "social media scheduler",
   ],
   openGraph: {
-    title: "Robô MultiPost — Agendador de Redes Sociais Self-Hosted com IA",
+    title: "Robô MultiPost — Domine Todas as Redes Sociais com IA",
     description:
-      "Automatize suas postagens em 33+ redes sociais com IA integrada. Controle total, sem mensalidade.",
+      "Agende posts em 33+ redes sociais com IA integrada. Self-hosted, sem mensalidade, controle total.",
     type: "website",
     locale: "pt_BR",
   },
@@ -35,8 +38,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-BR" className={inter.variable}>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }

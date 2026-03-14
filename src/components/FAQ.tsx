@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
@@ -47,27 +46,28 @@ const faqs = [
   },
 ];
 
-function FAQItem({
-  question,
-  answer,
-}: {
-  question: string;
-  answer: string;
-}) {
+function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/5">
+    <div className="border-b border-white/5 last:border-b-0">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between py-5 text-left"
+        className="group flex w-full items-center justify-between py-6 text-left"
       >
-        <span className="pr-4 font-medium text-white">{question}</span>
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-gray-400 transition-transform ${
-            open ? "rotate-180" : ""
+        <span className="pr-6 font-medium text-white transition-colors group-hover:text-violet-300">
+          {question}
+        </span>
+        <div
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 transition-all ${
+            open ? "rotate-45 border-violet-500/30 bg-violet-500/10" : ""
           }`}
-        />
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-gray-400">
+            <path d="M12 5v14" />
+            <path d="M5 12h14" />
+          </svg>
+        </div>
       </button>
       <AnimatePresence>
         {open && (
@@ -75,10 +75,10 @@ function FAQItem({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-gray-400">{answer}</p>
+            <p className="pb-6 leading-relaxed text-gray-400">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -89,24 +89,27 @@ function FAQItem({
 export default function FAQ() {
   return (
     <section id="faq" className="relative py-20 sm:py-28">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+      <div className="mx-auto max-w-3xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-3xl font-bold sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Perguntas{" "}
             <span className="text-gradient">frequentes</span>
           </h2>
+          <p className="mt-5 text-lg text-gray-400">
+            Tudo que você precisa saber antes de começar.
+          </p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12"
+          className="mt-14 glass gradient-border rounded-2xl px-6 sm:px-8"
         >
           {faqs.map((faq) => (
             <FAQItem key={faq.question} {...faq} />

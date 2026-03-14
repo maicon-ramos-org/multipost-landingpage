@@ -1,63 +1,65 @@
 "use client";
 
-import { Bot } from "lucide-react";
-
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
+
+const links = [
+  { label: "Funcionalidades", href: "#funcionalidades" },
+  { label: "Redes", href: "#redes" },
+  { label: "Conteúdo", href: "#conteudo" },
+  { label: "Preço", href: "#preco" },
+  { label: "FAQ", href: "#faq" },
+];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="h-6 w-6 text-primary-500" />
-            <span className="font-bold">
-              Robô Multi<span className="text-primary-400">Post</span>
+    <footer className="relative border-t border-white/5">
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-violet-700">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 8V4H8" />
+                <rect width="16" height="12" x="4" y="8" rx="2" />
+                <path d="m2 14 6-6" />
+                <path d="m14 20 8-8" />
+              </svg>
+            </div>
+            <span className="font-bold text-white">
+              Multi<span className="text-violet-400">Post</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-gray-500">
-            <a
-              href="#funcionalidades"
-              className="transition-colors hover:text-gray-300"
-            >
-              Funcionalidades
-            </a>
-            <a
-              href="#conteudo"
-              className="transition-colors hover:text-gray-300"
-            >
-              Conteúdo
-            </a>
-            <a
-              href="#preco"
-              className="transition-colors hover:text-gray-300"
-            >
-              Preço
-            </a>
-            <a
-              href="#faq"
-              className="transition-colors hover:text-gray-300"
-            >
-              FAQ
-            </a>
-          </div>
+          {/* Nav links */}
+          <nav className="flex flex-wrap items-center justify-center gap-6">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-gray-500 transition-colors hover:text-gray-300"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
+          {/* CTA */}
           <a
             href={CHECKOUT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-primary-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-primary-500"
+            className="rounded-full bg-white/5 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-white/10"
           >
-            Comprar Curso
+            Garantir Acesso
           </a>
         </div>
 
-        <div className="mt-8 border-t border-white/5 pt-8 text-center text-sm text-gray-600">
-          <p>
+        {/* Bottom */}
+        <div className="mt-10 border-t border-white/5 pt-8 text-center">
+          <p className="text-sm text-gray-600">
             Comunidade{" "}
-            <span className="text-primary-500">Automação Sem Limites</span>{" "}
-            &mdash; Todos os direitos reservados &copy; {new Date().getFullYear()}
+            <span className="text-violet-500">Automação Sem Limites</span>
+            {" "}&mdash; Todos os direitos reservados &copy; {new Date().getFullYear()}
           </p>
         </div>
       </div>
