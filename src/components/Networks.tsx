@@ -1,8 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { fadeUp, viewportOnce } from "@/lib/animations";
-import type { Variants } from "framer-motion";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const networks = [
   { name: "Instagram", slug: "Instagram" },
@@ -21,46 +23,74 @@ const networks = [
   { name: "Dribbble", slug: "Dribbble" },
 ];
 
-const gridStagger: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const networkItem: Variants = {
-  hidden: { opacity: 0, scale: 0.8, y: 10 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 20,
-    },
-  },
-};
-
 export default function Networks() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Heading
+      gsap.from(headingRef.current!, {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Network icons - wave stagger from left to right
+      const items = gridRef.current!.children;
+      gsap.from(items, {
+        scale: 0,
+        opacity: 0,
+        rotateY: 90,
+        stagger: {
+          amount: 0.6,
+          from: "start",
+        },
+        duration: 0.5,
+        ease: "elastic.out(1, 0.5)",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Footer text
+      gsap.from(footerRef.current!, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 90%",
+          once: true,
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="redes" className="relative py-20 sm:py-28">
+    <section ref={sectionRef} id="redes" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-950/10 to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="mx-auto max-w-3xl text-center"
-        >
+        <div ref={headingRef} className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             <span className="text-gradient">33+ canais</span> em uma única
             plataforma
@@ -69,25 +99,17 @@ export default function Networks() {
             Conecte todas as suas redes e publique em todos os canais
             simultaneamente.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={gridStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+        <div
+          ref={gridRef}
           className="mt-16 grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-7"
         >
           {networks.map((network) => (
-            <motion.div
+            <div
               key={network.name}
-              variants={networkItem}
-              whileHover={{
-                scale: 1.08,
-                y: -4,
-                transition: { duration: 0.2, ease: "easeOut" },
-              }}
-              className="glass gradient-border group flex flex-col items-center gap-3 rounded-xl px-4 py-5 transition-shadow duration-300 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-violet-600/10"
+              className="network-item glass gradient-border group flex flex-col items-center gap-3 rounded-xl px-4 py-5 transition-all duration-300 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-violet-600/10 hover:scale-[1.08] hover:-translate-y-1 will-change-transform"
+              style={{ perspective: "600px" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -101,20 +123,17 @@ export default function Networks() {
               <span className="text-xs font-medium text-gray-400 transition-colors group-hover:text-white">
                 {network.name}
               </span>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+        <p
+          ref={footerRef}
           className="mt-8 text-center text-sm text-gray-600"
         >
           + Google Business, Telegram, WhatsApp Status, Tumblr e muitos outros
           via API
-        </motion.p>
+        </p>
       </div>
     </section>
   );

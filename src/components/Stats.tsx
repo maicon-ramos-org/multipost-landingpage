@@ -1,38 +1,47 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { scaleIn, staggerContainer, fadeUp, viewportOnce } from "@/lib/animations";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function AnimatedCounter({
   target,
   suffix = "",
+  triggerRef,
 }: {
   target: number;
   suffix?: string;
+  triggerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+  const countRef = useRef({ val: 0 });
 
   useEffect(() => {
-    if (!inView) return;
-    const duration = 2000;
-    const startTime = performance.now();
+    if (!triggerRef.current) return;
 
-    function tick(now: number) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(tick);
-    }
+    const trigger = ScrollTrigger.create({
+      trigger: triggerRef.current,
+      start: "top 80%",
+      once: true,
+      onEnter: () => {
+        gsap.to(countRef.current, {
+          val: target,
+          duration: 2,
+          ease: "power3.out",
+          onUpdate: () => {
+            setCount(Math.floor(countRef.current.val));
+          },
+        });
+      },
+    });
 
-    requestAnimationFrame(tick);
-  }, [inView, target]);
+    return () => trigger.kill();
+  }, [target, triggerRef]);
 
   return (
-    <span ref={ref}>
+    <span>
       {count.toLocaleString("pt-BR")}
       {suffix}
     </span>
@@ -47,43 +56,76 @@ const stats = [
 ];
 
 export default function Stats() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Container scale-in
+      gsap.from(sectionRef.current!, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Individual stat items
+      const items = containerRef.current!.children;
+      gsap.from(items, {
+        y: 60,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-6">
-        <motion.div
-          variants={scaleIn}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+        <div
+          ref={sectionRef}
           className="glass gradient-border rounded-3xl px-6 py-12 sm:px-12 sm:py-16"
         >
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
+          <div
+            ref={containerRef}
             className="grid grid-cols-2 gap-8 lg:grid-cols-4"
           >
             {stats.map((stat) => (
-              <motion.div
-                key={stat.label}
-                variants={fadeUp}
-                className="text-center"
-              >
+              <div key={stat.label} className="text-center">
                 <div className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
                   {stat.displayValue ? (
                     stat.displayValue
                   ) : (
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    <AnimatedCounter
+                      target={stat.value}
+                      suffix={stat.suffix}
+                      triggerRef={sectionRef}
+                    />
                   )}
                 </div>
                 <p className="mt-2 text-sm text-gray-400 sm:text-base">
                   {stat.label}
                 </p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,14 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  fadeUp,
-  springScale,
-  checkPop,
-  staggerFast,
-  viewportOnce,
-} from "@/lib/animations";
-import type { Variants } from "framer-motion";
+import { useRef, useEffect, useCallback } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
@@ -24,31 +20,132 @@ const included = [
   "Suporte na comunidade",
 ];
 
-const listItem: Variants = {
-  hidden: { opacity: 0, x: -10 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.3, ease: "easeOut" },
-  },
-};
-
 export default function Pricing() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(card, {
+      rotateY: x * 8,
+      rotateX: -y * 8,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!cardRef.current) return;
+    gsap.to(cardRef.current, {
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.5,
+      ease: "elastic.out(1, 0.5)",
+    });
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Heading
+      gsap.from(headingRef.current!, {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Card entrance with spring bounce
+      gsap.from(cardRef.current!, {
+        opacity: 0,
+        scale: 0.85,
+        y: 60,
+        duration: 1,
+        ease: "elastic.out(1, 0.5)",
+        scrollTrigger: {
+          trigger: cardRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Checkmarks cascade
+      if (listRef.current) {
+        const items = listRef.current.children;
+        gsap.from(items, {
+          opacity: 0,
+          x: -20,
+          stagger: 0.06,
+          duration: 0.4,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: listRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
+
+        // Checkmark icons pop
+        const checks = listRef.current.querySelectorAll(".check-icon");
+        gsap.from(checks, {
+          scale: 0,
+          opacity: 0,
+          stagger: 0.06,
+          duration: 0.3,
+          ease: "back.out(3)",
+          scrollTrigger: {
+            trigger: listRef.current,
+            start: "top 85%",
+            once: true,
+          },
+          delay: 0.15,
+        });
+      }
+
+      // 3D tilt on mouse (desktop)
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        card.style.perspective = "1000px";
+        card.style.transformStyle = "preserve-3d";
+
+        card.addEventListener("mousemove", handleMouseMove);
+        card.addEventListener("mouseleave", handleMouseLeave);
+
+        return () => {
+          card.removeEventListener("mousemove", handleMouseMove);
+          card.removeEventListener("mouseleave", handleMouseLeave);
+        };
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [handleMouseMove, handleMouseLeave]);
+
   return (
-    <section id="preco" className="relative py-20 sm:py-32">
-      {/* Background glow */}
+    <section ref={sectionRef} id="preco" className="relative py-20 sm:py-32">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/8 blur-[150px]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="mx-auto max-w-3xl text-center"
-        >
+        <div ref={headingRef} className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Invista uma vez,{" "}
             <span className="text-gradient">economize para sempre</span>
@@ -57,17 +154,13 @@ export default function Pricing() {
             Enquanto outros pagam R$200+/mês em ferramentas limitadas, você
             investe uma única vez e tem controle total.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={springScale}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="mx-auto mt-16 max-w-lg"
-        >
-          {/* Card */}
-          <div className="gradient-border glow-violet-strong rounded-3xl bg-gradient-to-b from-white/[0.04] to-transparent p-8 sm:p-10">
+        <div className="mx-auto mt-16 max-w-lg" style={{ perspective: "1000px" }}>
+          <div
+            ref={cardRef}
+            className="gradient-border glow-violet-strong rounded-3xl bg-gradient-to-b from-white/[0.04] to-transparent p-8 sm:p-10 will-change-transform"
+          >
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-violet-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-violet-400">
               <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
@@ -89,26 +182,15 @@ export default function Pricing() {
             <div className="my-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
             {/* Benefits */}
-            <motion.ul
-              variants={staggerFast}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              className="space-y-3.5"
-            >
+            <ul ref={listRef} className="space-y-3.5">
               {included.map((item) => (
-                <motion.li
-                  key={item}
-                  variants={listItem}
-                  className="flex items-start gap-3"
-                >
-                  <motion.svg
-                    variants={checkPop}
+                <li key={item} className="flex items-start gap-3">
+                  <svg
+                    className="check-icon mt-0.5 shrink-0 text-violet-400"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
                     fill="none"
-                    className="mt-0.5 shrink-0 text-violet-400"
                   >
                     <path
                       d="M20 6L9 17l-5-5"
@@ -117,24 +199,18 @@ export default function Pricing() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </motion.svg>
+                  </svg>
                   <span className="text-gray-300">{item}</span>
-                </motion.li>
+                </li>
               ))}
-            </motion.ul>
+            </ul>
 
             {/* CTA */}
-            <motion.a
+            <a
               href={CHECKOUT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{
-                y: -2,
-                boxShadow: "0 20px 60px rgba(139, 92, 246, 0.3)",
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              className="btn-shimmer group mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 py-4 text-lg font-bold text-white"
+              className="btn-shimmer group mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 py-4 text-lg font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(139,92,246,0.3)]"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Garantir Minha Vaga
@@ -153,7 +229,7 @@ export default function Pricing() {
                   <path d="m12 5 7 7-7 7" />
                 </svg>
               </span>
-            </motion.a>
+            </a>
 
             {/* Trust */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500">
@@ -205,7 +281,7 @@ export default function Pricing() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fadeUp, staggerContainer, viewportOnce } from "@/lib/animations";
-import type { Variants } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const faqs = [
   {
@@ -48,15 +50,6 @@ const faqs = [
   },
 ];
 
-const faqItem: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" },
-  },
-};
-
 function FAQItem({
   question,
   answer,
@@ -67,10 +60,7 @@ function FAQItem({
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.div
-      variants={faqItem}
-      className="border-b border-white/5 last:border-b-0"
-    >
+    <div className="faq-item border-b border-white/5 last:border-b-0">
       <button
         onClick={() => setOpen(!open)}
         className="group flex w-full items-center justify-between py-6 text-left"
@@ -119,21 +109,58 @@ function FAQItem({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
 export default function FAQ() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Heading
+      gsap.from(headingRef.current!, {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // FAQ items stagger from bottom
+      if (containerRef.current) {
+        const items = containerRef.current.querySelectorAll(".faq-item");
+        gsap.from(items, {
+          opacity: 0,
+          y: 30,
+          stagger: 0.08,
+          duration: 0.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="faq" className="relative py-20 sm:py-28">
+    <section ref={sectionRef} id="faq" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-6">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="text-center"
-        >
+        <div ref={headingRef} className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Perguntas{" "}
             <span className="text-gradient">frequentes</span>
@@ -141,19 +168,16 @@ export default function FAQ() {
           <p className="mt-5 text-lg text-gray-400">
             Tudo que você precisa saber antes de começar.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+        <div
+          ref={containerRef}
           className="mt-14 glass gradient-border rounded-2xl px-6 sm:px-8"
         >
           {faqs.map((faq) => (
             <FAQItem key={faq.question} {...faq} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

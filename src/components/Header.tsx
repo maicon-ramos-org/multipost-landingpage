@@ -1,7 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
@@ -15,21 +19,32 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    if (!headerRef.current) return;
+
+    const trigger = ScrollTrigger.create({
+      start: "top -20",
+      onUpdate: (self) => {
+        if (!headerRef.current) return;
+        if (self.scroll() > 20) {
+          headerRef.current.classList.add("glass-strong", "shadow-lg", "shadow-black/20");
+          headerRef.current.classList.remove("bg-transparent");
+        } else {
+          headerRef.current.classList.remove("glass-strong", "shadow-lg", "shadow-black/20");
+          headerRef.current.classList.add("bg-transparent");
+        }
+      },
+    });
+
+    return () => trigger.kill();
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "glass-strong shadow-lg shadow-black/20"
-          : "bg-transparent"
-      }`}
+      ref={headerRef}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#" className="flex items-center gap-2.5">

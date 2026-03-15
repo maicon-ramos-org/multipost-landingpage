@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import {
-  fadeUp,
-  slideFromLeft,
-  staggerContainer,
-  viewportOnce,
-} from "@/lib/animations";
-import type { Variants } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const modules = [
   {
@@ -101,23 +98,6 @@ const modules = [
   },
 ];
 
-const topicStagger: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
-  },
-};
-
-const topicItem: Variants = {
-  hidden: { opacity: 0, x: -10 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.3, ease: "easeOut" },
-  },
-};
-
 function ModuleItem({
   mod,
   index,
@@ -127,37 +107,62 @@ function ModuleItem({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const dotRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const ctx = gsap.context(() => {
+      // Alternate slide from left/right
+      const xFrom = index % 2 === 0 ? -40 : 40;
+      gsap.from(ref.current!, {
+        opacity: 0,
+        x: xFrom,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 85%",
+          once: true,
+        },
+        delay: index * 0.05,
+      });
+
+      // Dot pulse when reached
+      if (dotRef.current) {
+        ScrollTrigger.create({
+          trigger: ref.current!,
+          start: "top 60%",
+          once: true,
+          onEnter: () => {
+            gsap.fromTo(
+              dotRef.current!,
+              { scale: 1 },
+              {
+                scale: 1.3,
+                duration: 0.3,
+                ease: "back.out(2)",
+                yoyo: true,
+                repeat: 1,
+              }
+            );
+          },
+        });
+      }
+    }, ref.current);
+
+    return () => ctx.revert();
+  }, [index]);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{
-        delay: index * 0.08,
-        duration: 0.5,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-    >
+    <div ref={ref}>
       <button
         onClick={() => setOpen(!open)}
         className="group flex w-full items-start gap-5 py-5 text-left"
       >
-        {/* Timeline dot */}
         <div className="relative flex flex-col items-center">
-          <motion.div
-            animate={
-              isInView
-                ? {
-                    scale: [1, 1.15, 1],
-                    transition: {
-                      delay: index * 0.08 + 0.3,
-                      duration: 0.4,
-                    },
-                  }
-                : {}
-            }
+          <div
+            ref={dotRef}
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-all ${
               open
                 ? "bg-gradient-to-br from-violet-500 to-violet-700 text-white shadow-lg shadow-violet-600/20"
@@ -165,7 +170,7 @@ function ModuleItem({
             }`}
           >
             {mod.number}
-          </motion.div>
+          </div>
         </div>
 
         <div className="flex-1">
@@ -201,49 +206,93 @@ function ModuleItem({
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <motion.ul
-              variants={topicStagger}
-              initial="hidden"
-              animate="visible"
-              className="mb-4 ml-[60px] space-y-2.5 border-l border-violet-500/10 pl-5"
-            >
+            <ul className="mb-4 ml-[60px] space-y-2.5 border-l border-violet-500/10 pl-5">
               {mod.topics.map((topic) => (
-                <motion.li
+                <li
                   key={topic}
-                  variants={topicItem}
                   className="flex items-center gap-2.5 text-sm text-gray-400"
                 >
                   <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/50" />
                   {topic}
-                </motion.li>
+                </li>
               ))}
-            </motion.ul>
+            </ul>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
 export default function CourseContent() {
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const timelineInView = useInView(timelineRef, {
-    once: true,
-    margin: "-100px",
-  });
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const timelineLineRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Header slide from left
+      gsap.from(headerRef.current!, {
+        opacity: 0,
+        x: -40,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Stats counters
+      if (statsRef.current) {
+        const items = statsRef.current.children;
+        gsap.from(items, {
+          opacity: 0,
+          y: 20,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
+      }
+
+      // Timeline line grows with scroll
+      if (timelineLineRef.current) {
+        gsap.fromTo(
+          timelineLineRef.current,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: timelineLineRef.current,
+              start: "top 80%",
+              end: "bottom 20%",
+              scrub: true,
+            },
+          }
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="conteudo" className="relative py-20 sm:py-28">
+    <section ref={sectionRef} id="conteudo" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-[1fr,1.2fr] lg:items-start">
           {/* Left side - header */}
-          <motion.div
-            variants={slideFromLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            className="lg:sticky lg:top-32"
-          >
+          <div ref={headerRef} className="lg:sticky lg:top-32">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Do zero ao deploy{" "}
               <span className="text-gradient">em produção</span>
@@ -254,40 +303,29 @@ export default function CourseContent() {
               sociais rodando.
             </p>
 
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              className="mt-8 flex items-center gap-6"
-            >
+            <div ref={statsRef} className="mt-8 flex items-center gap-6">
               {[
                 { val: "8", label: "Módulos" },
                 { val: "32+", label: "Aulas" },
                 { val: "∞", label: "Acesso" },
               ].map((item) => (
-                <motion.div
-                  key={item.label}
-                  variants={fadeUp}
-                  className="glass rounded-xl px-4 py-3"
-                >
+                <div key={item.label} className="glass rounded-xl px-4 py-3">
                   <div className="text-2xl font-bold text-white">
                     {item.val}
                   </div>
                   <div className="text-xs text-gray-500">{item.label}</div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Right side - timeline */}
-          <div ref={timelineRef} className="relative">
-            {/* Animated timeline line */}
-            <motion.div
-              className="absolute left-[19px] top-[20px] bottom-[20px] w-px origin-top bg-gradient-to-b from-violet-500/30 via-violet-500/10 to-transparent"
-              initial={{ scaleY: 0 }}
-              animate={timelineInView ? { scaleY: 1 } : {}}
-              transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+          <div className="relative">
+            {/* Animated timeline line - grows with scroll */}
+            <div
+              ref={timelineLineRef}
+              className="absolute left-[19px] top-[20px] bottom-[20px] w-px origin-top bg-gradient-to-b from-violet-500/30 via-violet-500/10 to-transparent will-change-transform"
+              style={{ transformOrigin: "top", transform: "scaleY(0)" }}
             />
 
             <div className="divide-y divide-white/5">

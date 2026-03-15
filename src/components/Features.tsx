@@ -1,7 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { fadeUp, staggerContainer, viewportOnce } from "@/lib/animations";
+import { useRef, useEffect, useCallback } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
@@ -62,7 +65,6 @@ const features = [
 function ScreenshotVisual({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="mt-4 overflow-hidden rounded-lg border border-white/5">
-      {/* Mini browser chrome */}
       <div className="flex items-center gap-1.5 bg-white/[0.02] px-3 py-1.5">
         <div className="h-2 w-2 rounded-full bg-red-500/40" />
         <div className="h-2 w-2 rounded-full bg-yellow-500/40" />
@@ -72,7 +74,7 @@ function ScreenshotVisual({ src, alt }: { src: string; alt: string }) {
       <img
         src={src}
         alt={alt}
-        className="w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        className="feature-img w-full transition-transform duration-500 ease-out"
         loading="lazy"
       />
     </div>
@@ -93,20 +95,108 @@ function DockerVisual() {
 }
 
 export default function Features() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const card = (e.currentTarget as HTMLElement);
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(card, {
+      rotateY: x * 5,
+      rotateX: -y * 5,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback((e: MouseEvent) => {
+    gsap.to(e.currentTarget as HTMLElement, {
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Heading
+      gsap.from(headingRef.current!, {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      // Cards with clip-path reveal
+      const cards = gridRef.current!.querySelectorAll(".feature-card");
+      cards.forEach((card, i) => {
+        gsap.from(card, {
+          clipPath: "inset(100% 0% 0% 0%)",
+          opacity: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            once: true,
+          },
+          delay: i * 0.1,
+        });
+
+        // Internal image parallax
+        const img = card.querySelector(".feature-img");
+        if (img) {
+          gsap.to(img, {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+        }
+
+        // 3D tilt on mouse (desktop)
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 768px)", () => {
+          (card as HTMLElement).style.perspective = "800px";
+          (card as HTMLElement).style.transformStyle = "preserve-3d";
+          card.addEventListener("mousemove", handleMouseMove as EventListener);
+          card.addEventListener("mouseleave", handleMouseLeave as EventListener);
+
+          return () => {
+            card.removeEventListener("mousemove", handleMouseMove as EventListener);
+            card.removeEventListener("mouseleave", handleMouseLeave as EventListener);
+          };
+        });
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [handleMouseMove, handleMouseLeave]);
+
   return (
-    <section id="funcionalidades" className="relative py-20 sm:py-28">
-      {/* Background glow orbs */}
+    <section ref={sectionRef} id="funcionalidades" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute top-1/4 -left-32 h-[400px] w-[400px] rounded-full bg-violet-600/5 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-1/4 -right-32 h-[300px] w-[300px] rounded-full bg-cyan-500/5 blur-[100px]" />
 
       <div className="mx-auto max-w-7xl px-6">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="mx-auto max-w-3xl text-center"
-        >
+        <div ref={headingRef} className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Tudo que você precisa,{" "}
             <span className="text-gradient">nada que não precisa</span>
@@ -115,24 +205,17 @@ export default function Features() {
             Uma plataforma completa que rivais cobram centenas por mês. Aqui,
             você é dono de tudo.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+        <div
+          ref={gridRef}
           className="mt-16 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           {features.map((feature) => (
-            <motion.div
+            <div
               key={feature.title}
-              variants={fadeUp}
-              whileHover={{
-                y: -4,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className={`group glass gradient-border rounded-2xl p-6 transition-shadow duration-300 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-violet-600/10 ${feature.span}`}
+              className={`feature-card group glass gradient-border rounded-2xl p-6 transition-shadow duration-300 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-violet-600/10 will-change-transform ${feature.span}`}
+              style={{ clipPath: "inset(0% 0% 0% 0%)" }}
             >
               <h3 className="text-base font-semibold text-white">
                 {feature.title}
@@ -148,9 +231,9 @@ export default function Features() {
               ) : (
                 <DockerVisual />
               )}
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

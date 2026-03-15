@@ -1,14 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  heroStagger,
-  heroBadge,
-  heroHeadline,
-  heroCTA,
-  heroVideo,
-} from "@/lib/animations";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitText from "./SplitText";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
@@ -23,12 +20,190 @@ const socialIcons = [
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+  const orbsRef = useRef<HTMLDivElement>(null);
 
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const mm = gsap.matchMedia();
+    const ctx = gsap.context(() => {
+      // Parallax background
+      gsap.to(bgRef.current, {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // Gradient orbs parallax at different speeds
+      if (orbsRef.current) {
+        const orbs = orbsRef.current.children;
+        [20, 35, 15].forEach((yP, i) => {
+          if (orbs[i]) {
+            gsap.to(orbs[i], {
+              yPercent: yP,
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
+          }
+        });
+      }
+
+      // Badge entrance
+      gsap.from(badgeRef.current, {
+        opacity: 0,
+        scale: 0.8,
+        y: 20,
+        duration: 0.6,
+        ease: "back.out(1.7)",
+        delay: 0.2,
+      });
+
+      // Headline clip-path reveal + letter stagger
+      mm.add("(min-width: 768px)", () => {
+        if (headlineRef.current) {
+          gsap.from(headlineRef.current, {
+            clipPath: "inset(0 50% 0 50%)",
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.4,
+          });
+
+          const chars = headlineRef.current.querySelectorAll(".split-char");
+          if (chars.length > 0) {
+            gsap.from(chars, {
+              opacity: 0,
+              y: 40,
+              rotateX: -90,
+              stagger: 0.02,
+              duration: 0.6,
+              ease: "back.out(1.7)",
+              delay: 0.5,
+            });
+          }
+        }
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        if (headlineRef.current) {
+          gsap.from(headlineRef.current, {
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            ease: "power3.out",
+            delay: 0.3,
+          });
+        }
+      });
+
+      // Subtitle
+      gsap.from(subtitleRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: "power3.out",
+        delay: 0.7,
+      });
+
+      // CTA
+      gsap.from(ctaRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power3.out",
+        delay: 0.9,
+      });
+
+      // Scroll indicator
+      gsap.from(scrollIndicatorRef.current, {
+        opacity: 0,
+        duration: 0.5,
+        delay: 1.5,
+      });
+      gsap.to(scrollIndicatorRef.current, {
+        y: 8,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 1.5,
+      });
+
+      // Video entrance
+      gsap.from(videoRef.current, {
+        opacity: 0,
+        y: 60,
+        scale: 0.97,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.6,
+      });
+
+      // Video scale-down on scroll
+      gsap.fromTo(
+        videoRef.current,
+        { scale: 1.05 },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: videoRef.current,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Floating social icons with parallax (desktop only)
+      mm.add("(min-width: 1024px)", () => {
+        const icons = section.querySelectorAll(".hero-social-icon");
+        icons.forEach((icon, i) => {
+          const s = socialIcons[i];
+          if (!s) return;
+
+          gsap.to(icon, {
+            y: -15,
+            duration: 4 + Math.random() * 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: s.delay,
+          });
+
+          gsap.to(icon, {
+            yPercent: -100 * s.speed,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+        });
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
@@ -36,55 +211,67 @@ export default function Hero() {
       className="relative min-h-screen overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-28"
     >
       {/* Parallax mesh gradient background */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 mesh-gradient"
-        style={{ y: bgY }}
+      <div
+        ref={bgRef}
+        className="pointer-events-none absolute inset-0 mesh-gradient will-change-transform"
       />
 
       {/* Animated gradient orbs */}
-      <div className="pointer-events-none absolute -top-40 left-1/4 h-[600px] w-[600px] rounded-full bg-violet-600/8 blur-[150px] animate-glow-pulse" />
-      <div
-        className="pointer-events-none absolute top-20 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/5 blur-[120px] animate-glow-pulse"
-        style={{ animationDelay: "1.5s" }}
-      />
-      <div className="pointer-events-none absolute bottom-0 left-1/2 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-violet-800/10 blur-[100px]" />
+      <div ref={orbsRef} className="pointer-events-none">
+        <div className="absolute -top-40 left-1/4 h-[600px] w-[600px] rounded-full bg-violet-600/8 blur-[150px] animate-glow-pulse will-change-transform" />
+        <div
+          className="absolute top-20 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/5 blur-[120px] animate-glow-pulse will-change-transform"
+          style={{ animationDelay: "1.5s" }}
+        />
+        <div className="absolute bottom-0 left-1/2 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-violet-800/10 blur-[100px] will-change-transform" />
+      </div>
 
-      {/* Floating social icons with parallax */}
-      {socialIcons.map((icon) => {
-        return (
-          <ParallaxIcon key={icon.name} icon={icon} scrollYProgress={scrollYProgress} />
-        );
-      })}
+      {/* Floating social icons */}
+      {socialIcons.map((icon) => (
+        <div
+          key={icon.name}
+          className="hero-social-icon pointer-events-none absolute hidden opacity-20 lg:block will-change-transform"
+          style={{ left: icon.x, top: icon.y }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`https://postiz.com/svgs/socials/${icon.name}.svg`}
+            alt=""
+            width={32}
+            height={32}
+            className="opacity-40"
+            loading="lazy"
+          />
+        </div>
+      ))}
 
       <div className="relative mx-auto max-w-7xl px-6">
-        <motion.div
-          variants={heroStagger}
-          initial="hidden"
-          animate="visible"
-          className="mx-auto max-w-4xl text-center"
-        >
+        <div className="mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <motion.div
-            variants={heroBadge}
+          <div
+            ref={badgeRef}
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-5 py-2 text-sm text-violet-300 backdrop-blur-sm"
           >
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             Comunidade Automação Sem Limites
-          </motion.div>
+          </div>
 
-          {/* Headline */}
-          <motion.h1
-            variants={heroHeadline}
+          {/* Headline with split text */}
+          <h1
+            ref={headlineRef}
             className="text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            style={{ clipPath: "inset(0 0% 0 0%)" }}
           >
-            Publique em{" "}
-            <span className="text-gradient">todas as redes</span>
-            <br className="hidden sm:block" />
-            {" "}com um único clique
-          </motion.h1>
+            <SplitText>Publique em</SplitText>{" "}
+            <span className="text-gradient">
+              <SplitText>todas as redes</SplitText>
+            </span>
+            <br className="hidden sm:block" />{" "}
+            <SplitText>com um único clique</SplitText>
+          </h1>
 
-          <motion.p
-            variants={heroHeadline}
+          <p
+            ref={subtitleRef}
             className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-400 sm:text-xl"
           >
             Agendador de redes sociais self-hosted com{" "}
@@ -92,11 +279,11 @@ export default function Hero() {
             <span className="font-medium text-white">33+ canais</span> e{" "}
             <span className="font-medium text-white">zero mensalidade</span>.
             Rode no seu servidor, automatize com n8n, escale sem limites.
-          </motion.p>
+          </p>
 
           {/* CTA */}
-          <motion.div
-            variants={heroCTA}
+          <div
+            ref={ctaRef}
             className="mt-10 flex flex-col items-center gap-5 sm:flex-row sm:justify-center"
           >
             <a
@@ -132,21 +319,12 @@ export default function Hero() {
                 Pagamento único &bull; Acesso vitalício
               </span>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="mt-12 flex justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-2 text-gray-600"
-          >
+        <div ref={scrollIndicatorRef} className="mt-12 flex justify-center">
+          <div className="flex flex-col items-center gap-2 text-gray-600">
             <span className="text-xs uppercase tracking-widest">Scroll</span>
             <svg
               width="16"
@@ -159,19 +337,13 @@ export default function Hero() {
             >
               <path d="m6 9 6 6 6-6" />
             </svg>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Video embed */}
-        <motion.div
-          variants={heroVideo}
-          initial="hidden"
-          animate="visible"
-          className="mx-auto mt-12 max-w-4xl"
-        >
+        <div ref={videoRef} className="mx-auto mt-12 max-w-4xl will-change-transform">
           <div className="gradient-border glow-violet rounded-2xl bg-[#030014] p-1.5">
             <div className="relative overflow-hidden rounded-xl bg-black/50">
-              {/* Browser chrome */}
               <div className="flex items-center gap-2 border-b border-white/5 bg-white/[0.02] px-4 py-3">
                 <div className="flex gap-1.5">
                   <div className="h-3 w-3 rounded-full bg-white/10" />
@@ -182,8 +354,6 @@ export default function Hero() {
                   app.multipost.com.br
                 </div>
               </div>
-
-              {/* YouTube embed */}
               <div className="aspect-video">
                 <iframe
                   src="https://www.youtube.com/embed/BdsCVvEYgHU?rel=0&modestbranding=1"
@@ -196,46 +366,8 @@ export default function Hero() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-  );
-}
-
-function ParallaxIcon({
-  icon,
-  scrollYProgress,
-}: {
-  icon: (typeof socialIcons)[0];
-  scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
-}) {
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, -100 * icon.speed]
-  );
-
-  return (
-    <motion.div
-      className="pointer-events-none absolute hidden opacity-20 lg:block"
-      style={{ left: icon.x, top: icon.y, y }}
-      animate={{ y: [0, -15, 0] }}
-      transition={{
-        duration: 4 + Math.random() * 2,
-        repeat: Infinity,
-        delay: icon.delay,
-        ease: "easeInOut",
-      }}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={`https://postiz.com/svgs/socials/${icon.name}.svg`}
-        alt=""
-        width={32}
-        height={32}
-        className="opacity-40"
-        loading="lazy"
-      />
-    </motion.div>
   );
 }
