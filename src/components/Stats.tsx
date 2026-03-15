@@ -2,15 +2,21 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { scaleIn, staggerContainer, fadeUp, viewportOnce } from "@/lib/animations";
 
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+function AnimatedCounter({
+  target,
+  suffix = "",
+}: {
+  target: number;
+  suffix?: string;
+}) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
 
   useEffect(() => {
     if (!inView) return;
-    let start = 0;
     const duration = 2000;
     const startTime = performance.now();
 
@@ -18,8 +24,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      start = Math.floor(eased * target);
-      setCount(start);
+      setCount(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(tick);
     }
 
@@ -46,20 +51,23 @@ export default function Stats() {
     <section className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          variants={scaleIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="glass gradient-border rounded-3xl px-6 py-12 sm:px-12 sm:py-16"
         >
-          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {stats.map((stat, i) => (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            className="grid grid-cols-2 gap-8 lg:grid-cols-4"
+          >
+            {stats.map((stat) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                variants={fadeUp}
                 className="text-center"
               >
                 <div className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
@@ -69,10 +77,12 @@ export default function Stats() {
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />
                   )}
                 </div>
-                <p className="mt-2 text-sm text-gray-400 sm:text-base">{stat.label}</p>
+                <p className="mt-2 text-sm text-gray-400 sm:text-base">
+                  {stat.label}
+                </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

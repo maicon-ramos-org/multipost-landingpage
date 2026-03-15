@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { fadeUp, staggerContainer, viewportOnce } from "@/lib/animations";
+import type { Variants } from "framer-motion";
 
 const faqs = [
   {
@@ -46,11 +48,29 @@ const faqs = [
   },
 ];
 
-function FAQItem({ question, answer }: { question: string; answer: string }) {
+const faqItem: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
+function FAQItem({
+  question,
+  answer,
+}: {
+  question: string;
+  answer: string;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/5 last:border-b-0">
+    <motion.div
+      variants={faqItem}
+      className="border-b border-white/5 last:border-b-0"
+    >
       <button
         onClick={() => setOpen(!open)}
         className="group flex w-full items-center justify-between py-6 text-left"
@@ -58,16 +78,33 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <span className="pr-6 font-medium text-white transition-colors group-hover:text-violet-300">
           {question}
         </span>
-        <div
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 transition-all ${
-            open ? "rotate-45 border-violet-500/30 bg-violet-500/10" : ""
-          }`}
+        <motion.div
+          animate={{
+            rotate: open ? 45 : 0,
+            borderColor: open
+              ? "rgba(139, 92, 246, 0.3)"
+              : "rgba(255, 255, 255, 0.1)",
+            backgroundColor: open
+              ? "rgba(139, 92, 246, 0.1)"
+              : "rgba(0, 0, 0, 0)",
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-gray-400">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            className="text-gray-400"
+          >
             <path d="M12 5v14" />
             <path d="M5 12h14" />
           </svg>
-        </div>
+        </motion.div>
       </button>
       <AnimatePresence>
         {open && (
@@ -75,14 +112,14 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
             <p className="pb-6 leading-relaxed text-gray-400">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -91,9 +128,10 @@ export default function FAQ() {
     <section id="faq" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
@@ -106,9 +144,10 @@ export default function FAQ() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="mt-14 glass gradient-border rounded-2xl px-6 sm:px-8"
         >
           {faqs.map((faq) => (

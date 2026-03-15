@@ -1,6 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import {
+  fadeUp,
+  springScale,
+  checkPop,
+  staggerFast,
+  viewportOnce,
+} from "@/lib/animations";
+import type { Variants } from "framer-motion";
 
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
@@ -16,6 +24,15 @@ const included = [
   "Suporte na comunidade",
 ];
 
+const listItem: Variants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.3, ease: "easeOut" },
+  },
+};
+
 export default function Pricing() {
   return (
     <section id="preco" className="relative py-20 sm:py-32">
@@ -26,9 +43,10 @@ export default function Pricing() {
 
       <div className="relative mx-auto max-w-7xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="mx-auto max-w-3xl text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
@@ -42,10 +60,10 @@ export default function Pricing() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          variants={springScale}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="mx-auto mt-16 max-w-lg"
         >
           {/* Card */}
@@ -71,17 +89,21 @@ export default function Pricing() {
             <div className="my-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
             {/* Benefits */}
-            <ul className="space-y-3.5">
-              {included.map((item, i) => (
+            <motion.ul
+              variants={staggerFast}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              className="space-y-3.5"
+            >
+              {included.map((item) => (
                 <motion.li
                   key={item}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
+                  variants={listItem}
                   className="flex items-start gap-3"
                 >
-                  <svg
+                  <motion.svg
+                    variants={checkPop}
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
@@ -95,44 +117,87 @@ export default function Pricing() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </motion.svg>
                   <span className="text-gray-300">{item}</span>
                 </motion.li>
               ))}
-            </ul>
+            </motion.ul>
 
             {/* CTA */}
-            <a
+            <motion.a
               href={CHECKOUT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-shimmer group mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 py-4 text-lg font-bold text-white transition-all hover:shadow-2xl hover:shadow-violet-600/30"
+              whileHover={{
+                y: -2,
+                boxShadow: "0 20px 60px rgba(139, 92, 246, 0.3)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="btn-shimmer group mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 py-4 text-lg font-bold text-white"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Garantir Minha Vaga
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform group-hover:translate-x-1"
+                >
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
                 </svg>
               </span>
-            </a>
+            </motion.a>
 
             {/* Trust */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500">
               <span className="flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 7 dias de garantia
               </span>
               <span className="flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
                 </svg>
                 Acesso vitalício
               </span>
               <span className="flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
                   <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
                 </svg>

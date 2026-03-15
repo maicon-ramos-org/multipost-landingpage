@@ -8,10 +8,12 @@ import CourseContent from "@/components/CourseContent";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <Header />
       <main>
         <Hero />
