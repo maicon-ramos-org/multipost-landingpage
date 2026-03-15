@@ -16,12 +16,32 @@ const faqs = [
   {
     question: "Quanto custa manter o servidor rodando?",
     answer:
-      "Um VPS básico (2GB RAM, 2 vCPU) custa entre R$30-50/mês e é suficiente para rodar o MultiPost com centenas de perfis. Muito menos do que qualquer ferramenta SaaS equivalente.",
+      "Um VPS básico (2GB RAM, 2 vCPU) custa entre R$30-50/mês e é suficiente para rodar o MultiPost com centenas de perfis. Para a IA, o custo é diretamente com o provedor — por exemplo, o GPT cobra cerca de US$0,01 por 1000 palavras geradas. Muito menos do que qualquer ferramenta SaaS equivalente.",
+  },
+  {
+    question: "Posso usar em mais de uma conta ou rede social?",
+    answer:
+      "Sim, pode utilizar em quantas contas e redes sociais desejar, sem limites. O sistema suporta 33+ canais nativamente — Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Pinterest, e muito mais.",
+  },
+  {
+    question: "Vou ter algum suporte?",
+    answer:
+      "SIM! Temos suporte via ticket no Discord para tirar dúvidas a qualquer momento. Além disso, nos primeiros 30 dias, se ocorrer qualquer erro, você tem suporte remoto 1 a 1 com nossa equipe via compartilhamento de tela.",
+  },
+  {
+    question: "Por quanto tempo terei acesso ao curso?",
+    answer:
+      "O acesso ao curso é durante 1 ano. Isso significa que você pode estudar no seu tempo e ainda terá acesso a novos módulos e atualizações durante esse período.",
+  },
+  {
+    question: "Depois de 1 ano preciso renovar o acesso?",
+    answer:
+      "O acesso de 1 ano é às aulas na Hotmart e aos grupos. Caso queira continuar tendo acesso a eles e a atualizações futuras, você pode renovar. Já o Robô MultiPost, depois de baixado e instalado na sua estrutura, é seu para sempre.",
   },
   {
     question: "O que acontece se eu não gostar do curso?",
     answer:
-      "Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, é só pedir o reembolso pela Hotmart e devolvemos 100% do seu investimento.",
+      "Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, é só solicitar o cancelamento direto na Hotmart e devolvemos 100% do seu investimento.",
   },
   {
     question: "Qual a diferença do MultiPost para o Postiz original?",
@@ -34,19 +54,19 @@ const faqs = [
       "Sim! O MultiPost tem API pública e webhooks completos. No curso, há um módulo dedicado à integração com n8n, incluindo templates prontos de fluxos de automação.",
   },
   {
-    question: "Quantas redes sociais posso conectar?",
-    answer:
-      "Não há limite. O sistema suporta 33+ canais nativamente e você pode conectar quantos perfis quiser. Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Pinterest, e muito mais.",
-  },
-  {
     question: "A IA é gratuita ou preciso pagar?",
     answer:
       "A integração com IA usa o framework Mastra + MCP. Você pode conectar qualquer LLM — incluindo modelos gratuitos e open source. Se usar APIs pagas como OpenAI ou Claude, o custo é diretamente com o provedor (geralmente centavos por uso).",
   },
   {
-    question: "Recebo atualizações futuras?",
+    question: "O conteúdo publicado é seguro para as redes sociais?",
     answer:
-      "Sim! Ao comprar o curso, você tem acesso vitalício ao conteúdo e receberá todas as atualizações futuras sem custo adicional.",
+      "O conteúdo é você quem define. Independente de ser automático ou manual, é importante seguir as regras e diretrizes de cada plataforma. O MultiPost usa as APIs oficiais das redes sociais, o que garante compatibilidade e segurança.",
+  },
+  {
+    question: "Quais são as formas de pagamento?",
+    answer:
+      "Aceitamos cartão de crédito, PIX, boleto bancário e outras formas disponíveis na Hotmart. Você escolhe a que for mais conveniente.",
   },
 ];
 
