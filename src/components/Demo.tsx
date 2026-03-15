@@ -46,63 +46,14 @@ export default function Demo() {
                 </div>
               </div>
 
-              {/* App mockup */}
-              <div className="bg-[#0d0d1a] p-6">
-                <div className="flex gap-4">
-                  {/* Sidebar */}
-                  <div className="hidden w-48 shrink-0 space-y-2 sm:block">
-                    {["Dashboard", "Calendário", "Posts", "Analytics", "Equipe", "Configurações"].map((item, i) => (
-                      <div
-                        key={item}
-                        className={`rounded-lg px-3 py-2 text-xs ${
-                          i === 0
-                            ? "bg-violet-500/10 text-violet-400 font-medium"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Main content */}
-                  <div className="flex-1 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-semibold text-white">Dashboard</div>
-                        <div className="text-[10px] text-gray-600">Visão geral das suas redes</div>
-                      </div>
-                      <div className="rounded-lg bg-violet-500/20 px-3 py-1.5 text-[10px] font-medium text-violet-400">
-                        + Novo Post
-                      </div>
-                    </div>
-
-                    {/* Mini stats */}
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { label: "Posts Agendados", value: "24" },
-                        { label: "Engajamento", value: "12.4K" },
-                        { label: "Canais Ativos", value: "8" },
-                      ].map((stat) => (
-                        <div key={stat.label} className="rounded-lg bg-white/[0.02] border border-white/5 p-3">
-                          <div className="text-lg font-bold text-white">{stat.value}</div>
-                          <div className="text-[10px] text-gray-600">{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Chart area */}
-                    <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4">
-                      <div className="text-xs font-medium text-gray-400 mb-3">Engajamento — 7 dias</div>
-                      <div className="flex items-end gap-2 h-20">
-                        {[30, 50, 40, 70, 55, 85, 65].map((h, i) => (
-                          <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-violet-600/30 to-violet-400/10" style={{ height: `${h}%` }} />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Real screenshot */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Planning.3f9ff858.png&w=1920&q=75"
+                alt="Postiz - Calendário de agendamento"
+                className="w-full"
+                loading="lazy"
+              />
             </div>
           </div>
         </motion.div>

@@ -8,6 +8,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "cms.postiz.com",
+      },
+      {
+        protocol: "https",
         hostname: "img.youtube.com",
       },
     ],

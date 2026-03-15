@@ -138,7 +138,7 @@ export default function Hero() {
               {/* YouTube embed */}
               <div className="aspect-video">
                 <iframe
-                  src="https://www.youtube.com/embed/YxMkANOFJsY?rel=0&modestbranding=1"
+                  src="https://www.youtube.com/embed/BdsCVvEYgHU?rel=0&modestbranding=1"
                   title="Robô MultiPost - Demo"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
