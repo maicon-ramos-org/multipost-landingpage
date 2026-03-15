@@ -19,22 +19,14 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!headerRef.current) return;
-
     const trigger = ScrollTrigger.create({
-      start: "top -20",
+      start: "top -40",
       onUpdate: (self) => {
-        if (!headerRef.current) return;
-        if (self.scroll() > 20) {
-          headerRef.current.classList.add("glass-strong", "shadow-lg", "shadow-black/20");
-          headerRef.current.classList.remove("bg-transparent");
-        } else {
-          headerRef.current.classList.remove("glass-strong", "shadow-lg", "shadow-black/20");
-          headerRef.current.classList.add("bg-transparent");
-        }
+        setScrolled(self.scroll() > 40);
       },
     });
 
@@ -44,12 +36,20 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/[0.06]"
+          : "bg-transparent"
+      }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/logo-text.svg" alt="MultiPost" className="h-8" />
+          <img
+            src="https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/logo-text.svg"
+            alt="MultiPost"
+            className="h-7"
+          />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -57,7 +57,7 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-lg px-4 py-2 text-sm text-gray-400 transition-all hover:bg-white/5 hover:text-white"
+              className="rounded-full px-4 py-2 text-sm text-[#999] transition-all hover:text-white"
             >
               {link.label}
             </a>
@@ -66,7 +66,7 @@ export default function Header() {
             href={CHECKOUT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-shimmer ml-4 rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-violet-600/25"
+            className="ml-4 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
           >
             Garantir Acesso
           </a>
@@ -74,7 +74,7 @@ export default function Header() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/5 hover:text-white md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-[#999] transition-colors hover:bg-white/5 hover:text-white md:hidden"
           aria-label="Menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -100,7 +100,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-white/5 md:hidden"
+            className="overflow-hidden border-t border-white/5 bg-[#0A0A0A]/95 backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col gap-1 px-6 py-4">
               {navLinks.map((link) => (
@@ -108,7 +108,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-4 py-3 text-sm text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+                  className="rounded-lg px-4 py-3 text-sm text-[#999] transition-colors hover:bg-white/5 hover:text-white"
                 >
                   {link.label}
                 </a>
@@ -117,7 +117,7 @@ export default function Header() {
                 href={CHECKOUT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-center text-sm font-semibold text-white"
+                className="mt-2 rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white"
               >
                 Garantir Acesso
               </a>

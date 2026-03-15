@@ -57,58 +57,45 @@ const stats = [
 
 export default function Stats() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!sectionRef.current || !containerRef.current) return;
+    if (!sectionRef.current || !itemsRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Container scale-in
-      gsap.from(sectionRef.current!, {
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      // Individual stat items
-      const items = containerRef.current!.children;
-      gsap.from(items, {
-        y: 60,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 80%",
-          once: true,
-        },
-      });
+      const items = itemsRef.current!.children;
+      gsap.fromTo(
+        items,
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            end: "top 50%",
+            scrub: true,
+          },
+        }
+      );
     });
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section className="relative py-20 sm:py-28">
+    <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <div
-          ref={sectionRef}
-          className="glass gradient-border rounded-3xl px-6 py-12 sm:px-12 sm:py-16"
-        >
+        <div ref={sectionRef}>
           <div
-            ref={containerRef}
-            className="grid grid-cols-2 gap-8 lg:grid-cols-4"
+            ref={itemsRef}
+            className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/[0.06]"
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
+              <div key={stat.label} className="text-center lg:px-8">
+                <div className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
                   {stat.displayValue ? (
                     stat.displayValue
                   ) : (
@@ -119,7 +106,7 @@ export default function Stats() {
                     />
                   )}
                 </div>
-                <p className="mt-2 text-sm text-gray-400 sm:text-base">
+                <p className="mt-2 text-sm text-[#666] sm:text-base">
                   {stat.label}
                 </p>
               </div>

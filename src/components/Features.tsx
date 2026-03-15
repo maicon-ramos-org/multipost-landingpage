@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -11,85 +11,160 @@ const features = [
     title: "Calendário Inteligente",
     description:
       "Arraste e solte posts no calendário visual. Veja toda sua estratégia de conteúdo em uma timeline unificada.",
-    span: "col-span-1 md:col-span-2 md:row-span-2",
-    visual: "calendar",
-    screenshot:
-      "https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Planning.3f9ff858.png&w=1920&q=75",
+    video: "https://postiz.com/videos/1.mp4",
   },
   {
     title: "IA para Conteúdo",
     description:
       "Framework Mastra + MCP integrado. Gere textos, adapte tom de voz, crie variações para cada rede automaticamente.",
-    span: "col-span-1",
-    visual: "ai",
-    screenshot:
-      "https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Creating.f4022706.png&w=1080&q=75",
+    video: "https://postiz.com/videos/2.mp4",
   },
   {
     title: "Analytics em Tempo Real",
     description:
       "Métricas detalhadas de cada canal. Engajamento, alcance e crescimento — tudo em dashboards interativos.",
-    span: "col-span-1",
-    visual: "analytics",
-    screenshot:
-      "https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Analytics.d1755132.png&w=1920&q=75",
+    video: "https://postiz.com/videos/3.mp4",
   },
   {
-    title: "Multi-tenancy & Equipe",
+    title: "Múltiplas Contas",
     description:
-      "Gerencie múltiplos clientes com organizações separadas. Permissões, aprovações e fluxos profissionais.",
-    span: "col-span-1",
-    visual: "team",
-    screenshot:
-      "https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Organizing.bae04955.png&w=1080&q=75",
+      "Gerencie dezenas de perfis em uma única interface. Organizações separadas, permissões e aprovações.",
+    video: "https://postiz.com/videos/4.mp4",
   },
   {
-    title: "Docker & Self-Hosted",
+    title: "Automação Total",
     description:
-      "Deploy em minutos com Docker Compose. Next.js, NestJS, PostgreSQL, Redis e Temporal.io no seu servidor.",
-    span: "col-span-1",
-    visual: "docker",
-    screenshot: null,
+      "API pública + webhooks para integrar com n8n, Make ou Zapier. Publique automaticamente com fluxos inteligentes.",
+    video: "https://postiz.com/videos/5.mp4",
   },
   {
-    title: "API & Webhooks Completos",
+    title: "Gestão de Equipe",
     description:
-      "API pública para integrar com n8n, Make, Zapier ou qualquer automação. Webhooks em tempo real.",
-    span: "col-span-1 md:col-span-2",
-    visual: "api",
-    screenshot:
-      "https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpost-web.69922432.png&w=1920&q=75",
+      "Multi-tenancy, fluxos de aprovação, permissões por papel. Escale com segurança para agências e times.",
+    video: "https://postiz.com/videos/6.mp4",
   },
 ];
 
-function ScreenshotVisual({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div className="mt-4 overflow-hidden rounded-lg border border-white/5">
-      <div className="flex items-center gap-1.5 bg-white/[0.02] px-3 py-1.5">
-        <div className="h-2 w-2 rounded-full bg-red-500/40" />
-        <div className="h-2 w-2 rounded-full bg-yellow-500/40" />
-        <div className="h-2 w-2 rounded-full bg-green-500/40" />
-      </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        className="feature-img w-full transition-transform duration-500 ease-out"
-        loading="lazy"
-      />
-    </div>
-  );
-}
+function FeatureSection({
+  feature,
+  index,
+}: {
+  feature: (typeof features)[0];
+  index: number;
+}) {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const isEven = index % 2 === 0;
 
-function DockerVisual() {
+  useEffect(() => {
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Text slide in from left/right (bidirectional)
+      gsap.fromTo(
+        textRef.current,
+        { x: isEven ? -60 : 60, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            end: "top 40%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Video container slide in from opposite side (bidirectional)
+      gsap.fromTo(
+        videoContainerRef.current,
+        { x: isEven ? 60 : -60, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            end: "top 40%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Video scroll-scrub
+      if (video) {
+        const setupVideoScrub = () => {
+          if (!video.duration) return;
+
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top 70%",
+            end: "bottom 30%",
+            scrub: 1,
+            onUpdate: (self) => {
+              if (video.duration) {
+                video.currentTime = self.progress * video.duration;
+              }
+            },
+          });
+        };
+
+        if (video.readyState >= 1) {
+          setupVideoScrub();
+        } else {
+          video.addEventListener("loadedmetadata", setupVideoScrub, { once: true });
+        }
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, [isEven]);
+
   return (
-    <div className="mt-4 rounded-lg border border-white/5 bg-black/40 px-3 py-2 font-mono">
-      <p className="text-[10px] text-gray-500">$ docker compose up -d</p>
-      <p className="mt-1 text-[10px] text-emerald-400/70">✓ multipost-web</p>
-      <p className="text-[10px] text-emerald-400/70">✓ multipost-api</p>
-      <p className="text-[10px] text-emerald-400/70">
-        ✓ postgres &bull; redis
-      </p>
+    <div
+      ref={sectionRef}
+      className={`grid items-center gap-12 lg:grid-cols-2 lg:gap-20 ${
+        isEven ? "" : "lg:[direction:rtl]"
+      }`}
+    >
+      <div ref={textRef} className={isEven ? "" : "lg:[direction:ltr]"}>
+        <span className="font-display text-sm font-bold uppercase tracking-widest text-accent">
+          0{index + 1}
+        </span>
+        <h3 className="mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+          {feature.title}
+        </h3>
+        <p className="mt-5 text-lg leading-relaxed text-[#999]">
+          {feature.description}
+        </p>
+      </div>
+
+      <div ref={videoContainerRef} className={isEven ? "" : "lg:[direction:ltr]"}>
+        <div className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden shadow-xl shadow-black/30">
+          <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-3 py-2">
+            <div className="h-2 w-2 rounded-full bg-white/10" />
+            <div className="h-2 w-2 rounded-full bg-white/10" />
+            <div className="h-2 w-2 rounded-full bg-white/10" />
+          </div>
+          <div className="aspect-video bg-black">
+            <video
+              ref={videoRef}
+              src={feature.video}
+              muted
+              playsInline
+              preload="auto"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -97,140 +172,48 @@ function DockerVisual() {
 export default function Features() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const card = (e.currentTarget as HTMLElement);
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    gsap.to(card, {
-      rotateY: x * 5,
-      rotateX: -y * 5,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  }, []);
-
-  const handleMouseLeave = useCallback((e: MouseEvent) => {
-    gsap.to(e.currentTarget as HTMLElement, {
-      rotateY: 0,
-      rotateX: 0,
-      duration: 0.5,
-      ease: "power2.out",
-    });
-  }, []);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    if (!sectionRef.current || !headingRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Heading
-      gsap.from(headingRef.current!, {
-        opacity: 0,
-        y: 40,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      // Cards with clip-path reveal
-      const cards = gridRef.current!.querySelectorAll(".feature-card");
-      cards.forEach((card, i) => {
-        gsap.from(card, {
-          clipPath: "inset(100% 0% 0% 0%)",
-          opacity: 0,
-          duration: 0.7,
-          ease: "power3.out",
+      gsap.fromTo(
+        headingRef.current,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          ease: "none",
           scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-            once: true,
+            trigger: headingRef.current,
+            start: "top 85%",
+            end: "top 60%",
+            scrub: true,
           },
-          delay: i * 0.1,
-        });
-
-        // Internal image parallax
-        const img = card.querySelector(".feature-img");
-        if (img) {
-          gsap.to(img, {
-            yPercent: -10,
-            ease: "none",
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
         }
-
-        // 3D tilt on mouse (desktop)
-        const mm = gsap.matchMedia();
-        mm.add("(min-width: 768px)", () => {
-          (card as HTMLElement).style.perspective = "800px";
-          (card as HTMLElement).style.transformStyle = "preserve-3d";
-          card.addEventListener("mousemove", handleMouseMove as EventListener);
-          card.addEventListener("mouseleave", handleMouseLeave as EventListener);
-
-          return () => {
-            card.removeEventListener("mousemove", handleMouseMove as EventListener);
-            card.removeEventListener("mouseleave", handleMouseLeave as EventListener);
-          };
-        });
-      });
-    }, section);
+      );
+    }, sectionRef.current);
 
     return () => ctx.revert();
-  }, [handleMouseMove, handleMouseLeave]);
+  }, []);
 
   return (
-    <section ref={sectionRef} id="funcionalidades" className="relative py-20 sm:py-28">
-      <div className="pointer-events-none absolute top-1/4 -left-32 h-[400px] w-[400px] rounded-full bg-violet-600/5 blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-1/4 -right-32 h-[300px] w-[300px] rounded-full bg-cyan-500/5 blur-[100px]" />
-
+    <section ref={sectionRef} id="funcionalidades" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <div ref={headingRef} className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+        <div ref={headingRef} className="mx-auto max-w-3xl text-center mb-24">
+          <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Tudo que você precisa,{" "}
-            <span className="text-gradient">nada que não precisa</span>
+            <span className="text-accent-gradient">nada que não precisa</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-gray-400">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-[#999]">
             Uma plataforma completa que rivais cobram centenas por mês. Aqui,
             você é dono de tudo.
           </p>
         </div>
 
-        <div
-          ref={gridRef}
-          className="mt-16 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        >
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className={`feature-card group glass gradient-border rounded-2xl p-6 transition-shadow duration-300 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-violet-600/10 will-change-transform ${feature.span}`}
-            >
-              <h3 className="text-base font-semibold text-white">
-                {feature.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-400">
-                {feature.description}
-              </p>
-              {feature.screenshot ? (
-                <ScreenshotVisual
-                  src={feature.screenshot}
-                  alt={feature.title}
-                />
-              ) : (
-                <DockerVisual />
-              )}
-            </div>
+        <div className="space-y-32 sm:space-y-40">
+          {features.map((feature, i) => (
+            <FeatureSection key={feature.title} feature={feature} index={i} />
           ))}
         </div>
       </div>

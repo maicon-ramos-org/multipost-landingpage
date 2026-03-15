@@ -8,83 +8,38 @@ gsap.registerPlugin(ScrollTrigger);
 
 const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
-const socialIcons = [
-  { name: "Instagram", x: "10%", y: "20%", delay: 0, speed: 0.3 },
-  { name: "Youtube", x: "85%", y: "15%", delay: 0.5, speed: 0.5 },
-  { name: "TikTok", x: "5%", y: "65%", delay: 1, speed: 0.4 },
-  { name: "LinkedIn", x: "90%", y: "55%", delay: 1.5, speed: 0.6 },
-  { name: "X", x: "15%", y: "85%", delay: 0.8, speed: 0.35 },
-  { name: "Facebook", x: "80%", y: "80%", delay: 1.2, speed: 0.45 },
-];
-
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-  const orbsRef = useRef<HTMLDivElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
+    const video = videoRef.current;
     if (!section) return;
 
-    const mm = gsap.matchMedia();
     const ctx = gsap.context(() => {
-      // Parallax background
-      gsap.to(bgRef.current, {
-        yPercent: 30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
-      // Gradient orbs parallax at different speeds
-      if (orbsRef.current) {
-        const orbs = orbsRef.current.children;
-        [20, 35, 15].forEach((yP, i) => {
-          if (orbs[i]) {
-            gsap.to(orbs[i], {
-              yPercent: yP,
-              ease: "none",
-              scrollTrigger: {
-                trigger: section,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-              },
-            });
-          }
-        });
-      }
-
       // Badge entrance
       gsap.from(badgeRef.current, {
         opacity: 0,
-        scale: 0.8,
         y: 20,
         duration: 0.6,
-        ease: "back.out(1.7)",
+        ease: "power3.out",
         delay: 0.2,
       });
 
-      // Headline fade + slide up
-      if (headlineRef.current) {
-        gsap.from(headlineRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.4,
-        });
-      }
+      // Headline entrance
+      gsap.from(headlineRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.3,
+      });
 
       // Subtitle
       gsap.from(subtitleRef.current, {
@@ -92,7 +47,7 @@ export default function Hero() {
         y: 30,
         duration: 0.6,
         ease: "power3.out",
-        delay: 0.7,
+        delay: 0.5,
       });
 
       // CTA
@@ -101,78 +56,72 @@ export default function Hero() {
         y: 20,
         duration: 0.5,
         ease: "power3.out",
-        delay: 0.9,
+        delay: 0.7,
       });
 
-      // Scroll indicator
-      gsap.from(scrollIndicatorRef.current, {
+      // Video container entrance
+      gsap.from(videoContainerRef.current, {
         opacity: 0,
-        duration: 0.5,
-        delay: 1.5,
-      });
-      gsap.to(scrollIndicatorRef.current, {
-        y: 8,
+        y: 80,
+        scale: 0.95,
         duration: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 1.5,
-      });
-
-      // Video entrance
-      gsap.from(videoRef.current, {
-        opacity: 0,
-        y: 60,
-        scale: 0.97,
-        duration: 0.8,
         ease: "power3.out",
-        delay: 0.6,
+        delay: 0.5,
       });
 
-      // Video scale-down on scroll
+      // Video scroll-scrub: as user scrolls, video plays forward/backward
+      if (video) {
+        const setupVideoScrub = () => {
+          if (!video.duration) return;
+
+          ScrollTrigger.create({
+            trigger: videoContainerRef.current,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: 1,
+            onUpdate: (self) => {
+              if (video.duration) {
+                video.currentTime = self.progress * video.duration;
+              }
+            },
+          });
+        };
+
+        if (video.readyState >= 1) {
+          setupVideoScrub();
+        } else {
+          video.addEventListener("loadedmetadata", setupVideoScrub, { once: true });
+        }
+      }
+
+      // Parallax: text fades out as you scroll (bidirectional)
+      gsap.to([headlineRef.current, subtitleRef.current, ctaRef.current], {
+        yPercent: -30,
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "60% top",
+          scrub: true,
+        },
+      });
+
+      // Video scale-up as it enters view (bidirectional)
       gsap.fromTo(
-        videoRef.current,
-        { scale: 1.05 },
+        videoContainerRef.current,
+        { scale: 0.9 },
         {
           scale: 1,
           ease: "none",
           scrollTrigger: {
-            trigger: videoRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
+            trigger: videoContainerRef.current,
+            start: "top 90%",
+            end: "top 30%",
             scrub: true,
           },
         }
       );
-
-      // Floating social icons with parallax (desktop only)
-      mm.add("(min-width: 1024px)", () => {
-        const icons = section.querySelectorAll(".hero-social-icon");
-        icons.forEach((icon, i) => {
-          const s = socialIcons[i];
-          if (!s) return;
-
-          gsap.to(icon, {
-            y: -15,
-            duration: 4 + Math.random() * 2,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-            delay: s.delay,
-          });
-
-          gsap.to(icon, {
-            yPercent: -100 * s.speed,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
-        });
-      });
     }, section);
 
     return () => ctx.revert();
@@ -181,70 +130,36 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-28"
+      className="relative min-h-screen overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32"
     >
-      {/* Parallax mesh gradient background */}
-      <div
-        ref={bgRef}
-        className="pointer-events-none absolute inset-0 mesh-gradient will-change-transform"
-      />
-
-      {/* Animated gradient orbs */}
-      <div ref={orbsRef} className="pointer-events-none">
-        <div className="absolute -top-40 left-1/4 h-[600px] w-[600px] rounded-full bg-violet-600/8 blur-[150px] animate-glow-pulse will-change-transform" />
-        <div
-          className="absolute top-20 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/5 blur-[120px] animate-glow-pulse will-change-transform"
-          style={{ animationDelay: "1.5s" }}
-        />
-        <div className="absolute bottom-0 left-1/2 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-violet-800/10 blur-[100px] will-change-transform" />
-      </div>
-
-      {/* Floating social icons */}
-      {socialIcons.map((icon) => (
-        <div
-          key={icon.name}
-          className="hero-social-icon pointer-events-none absolute hidden opacity-20 lg:block will-change-transform"
-          style={{ left: icon.x, top: icon.y }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`https://postiz.com/svgs/socials/${icon.name}.svg`}
-            alt=""
-            width={32}
-            height={32}
-            className="opacity-40"
-            loading="lazy"
-          />
-        </div>
-      ))}
+      {/* Subtle gradient accent */}
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-accent/[0.04] blur-[150px]" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-4xl text-center">
           {/* Badge */}
           <div
             ref={badgeRef}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-5 py-2 text-sm text-violet-300 backdrop-blur-sm"
+            className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/[0.08] px-5 py-2 text-sm text-accent"
           >
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             Comunidade Automação Sem Limites
           </div>
 
-          {/* Headline with split text */}
+          {/* Headline */}
           <h1
             ref={headlineRef}
-            className="text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
           >
             Publique em{" "}
-            <span className="text-gradient">
-              todas as redes
-            </span>
+            <span className="text-accent-gradient">todas as redes</span>
             <br className="hidden sm:block" />{" "}
             com um único clique
           </h1>
 
           <p
             ref={subtitleRef}
-            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-400 sm:text-xl"
+            className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-[#999] sm:text-xl"
           >
             Agendador de redes sociais self-hosted com{" "}
             <span className="font-medium text-white">IA integrada</span>,{" "}
@@ -262,7 +177,7 @@ export default function Hero() {
               href={CHECKOUT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-shimmer group relative rounded-full bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 px-10 py-4 text-lg font-bold text-white transition-all hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5"
+              className="btn-shimmer group rounded-full bg-accent px-10 py-4 text-lg font-bold text-white transition-all hover:bg-accent-hover hover:shadow-2xl hover:shadow-accent/25 hover:-translate-y-0.5"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Quero o Robô MultiPost
@@ -283,59 +198,40 @@ export default function Hero() {
               </span>
             </a>
             <div className="flex flex-col items-center sm:items-start">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[#666]">
                 Por apenas{" "}
-                <span className="font-bold text-violet-400">R$297</span>
+                <span className="font-bold text-accent">R$297</span>
               </span>
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-[#555]">
                 Pagamento único &bull; Acesso vitalício
               </span>
             </div>
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div ref={scrollIndicatorRef} className="mt-12 flex justify-center">
-          <div className="flex flex-col items-center gap-2 text-gray-600">
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Video embed */}
-        <div ref={videoRef} className="mx-auto mt-12 max-w-4xl will-change-transform">
-          <div className="gradient-border glow-violet rounded-2xl bg-[#030014] p-1.5">
-            <div className="relative overflow-hidden rounded-xl bg-black/50">
-              <div className="flex items-center gap-2 border-b border-white/5 bg-white/[0.02] px-4 py-3">
-                <div className="flex gap-1.5">
-                  <div className="h-3 w-3 rounded-full bg-white/10" />
-                  <div className="h-3 w-3 rounded-full bg-white/10" />
-                  <div className="h-3 w-3 rounded-full bg-white/10" />
-                </div>
-                <div className="mx-auto rounded-md bg-white/5 px-4 py-1 text-xs text-gray-500">
-                  app.multipost.com.br
-                </div>
+        {/* Video with scroll-scrub */}
+        <div ref={videoContainerRef} className="mx-auto mt-20 max-w-5xl will-change-transform">
+          <div className="rounded-2xl border border-white/[0.08] bg-surface-raised overflow-hidden shadow-2xl shadow-black/50">
+            {/* Browser chrome */}
+            <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
+              <div className="flex gap-1.5">
+                <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
+                <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
+                <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
               </div>
-              <div className="aspect-video">
-                <iframe
-                  src="https://www.youtube.com/embed/BdsCVvEYgHU?rel=0&modestbranding=1"
-                  title="Robô MultiPost - Demo"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full"
-                  loading="lazy"
-                />
+              <div className="mx-auto rounded-md bg-white/5 px-4 py-1 text-xs text-[#555]">
+                app.multipost.com.br
               </div>
+            </div>
+            <div className="aspect-video bg-black">
+              <video
+                ref={videoRef}
+                src="https://postiz.com/videos/hero.webm"
+                muted
+                playsInline
+                preload="auto"
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
         </div>
