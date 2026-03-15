@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     "postiz",
     "social media scheduler",
   ],
+  icons: {
+    icon: "https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/postiz.svg",
+  },
   openGraph: {
     title: "Robô MultiPost — Domine Todas as Redes Sociais com IA",
     description:

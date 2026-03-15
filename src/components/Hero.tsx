@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitText from "./SplitText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,42 +75,16 @@ export default function Hero() {
         delay: 0.2,
       });
 
-      // Headline clip-path reveal + letter stagger
-      mm.add("(min-width: 768px)", () => {
-        if (headlineRef.current) {
-          gsap.from(headlineRef.current, {
-            clipPath: "inset(0 50% 0 50%)",
-            duration: 1,
-            ease: "power3.out",
-            delay: 0.4,
-          });
-
-          const chars = headlineRef.current.querySelectorAll(".split-char");
-          if (chars.length > 0) {
-            gsap.from(chars, {
-              opacity: 0,
-              y: 40,
-              rotateX: -90,
-              stagger: 0.02,
-              duration: 0.6,
-              ease: "back.out(1.7)",
-              delay: 0.5,
-            });
-          }
-        }
-      });
-
-      mm.add("(max-width: 767px)", () => {
-        if (headlineRef.current) {
-          gsap.from(headlineRef.current, {
-            opacity: 0,
-            y: 30,
-            duration: 0.6,
-            ease: "power3.out",
-            delay: 0.3,
-          });
-        }
-      });
+      // Headline fade + slide up
+      if (headlineRef.current) {
+        gsap.from(headlineRef.current, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: "power3.out",
+          delay: 0.4,
+        });
+      }
 
       // Subtitle
       gsap.from(subtitleRef.current, {
@@ -260,14 +233,13 @@ export default function Hero() {
           <h1
             ref={headlineRef}
             className="text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
-            style={{ clipPath: "inset(0 0% 0 0%)" }}
           >
-            <SplitText>Publique em</SplitText>{" "}
+            Publique em{" "}
             <span className="text-gradient">
-              <SplitText>todas as redes</SplitText>
+              todas as redes
             </span>
             <br className="hidden sm:block" />{" "}
-            <SplitText>com um único clique</SplitText>
+            com um único clique
           </h1>
 
           <p

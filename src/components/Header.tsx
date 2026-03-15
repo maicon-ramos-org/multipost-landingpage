@@ -47,18 +47,9 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-violet-700">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 8V4H8" />
-              <rect width="16" height="12" x="4" y="8" rx="2" />
-              <path d="m2 14 6-6" />
-              <path d="m14 20 8-8" />
-            </svg>
-          </div>
-          <span className="text-lg font-bold tracking-tight text-white">
-            Multi<span className="text-violet-400">Post</span>
-          </span>
+        <a href="#" className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/logo-text.svg" alt="MultiPost" className="h-8" />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex">

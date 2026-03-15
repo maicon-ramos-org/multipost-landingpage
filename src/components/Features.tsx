@@ -215,7 +215,6 @@ export default function Features() {
             <div
               key={feature.title}
               className={`feature-card group glass gradient-border rounded-2xl p-6 transition-shadow duration-300 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-violet-600/10 will-change-transform ${feature.span}`}
-              style={{ clipPath: "inset(0% 0% 0% 0%)" }}
             >
               <h3 className="text-base font-semibold text-white">
                 {feature.title}
