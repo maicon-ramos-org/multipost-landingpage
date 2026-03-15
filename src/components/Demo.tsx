@@ -17,32 +17,22 @@ export default function Demo() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Heading
-      gsap.from(headingRef.current!, {
-        opacity: 0,
-        y: 40,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      // Browser frame entrance with scale
-      gsap.from(browserRef.current!, {
-        opacity: 0,
-        scale: 0.9,
-        y: 40,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: browserRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
+      // Heading (bidirectional)
+      gsap.fromTo(
+        headingRef.current!,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 85%",
+            end: "top 60%",
+            scrub: 0.3,
+          },
+        }
+      );
 
       // Image parallax inside browser frame
       if (imgRef.current) {
@@ -58,12 +48,13 @@ export default function Demo() {
         });
       }
 
-      // Browser frame scale grows with scroll
+      // Browser frame scale grows with scroll (bidirectional)
       gsap.fromTo(
         browserRef.current!,
-        { scale: 0.92 },
+        { scale: 0.92, opacity: 0 },
         {
           scale: 1,
+          opacity: 1,
           ease: "none",
           scrollTrigger: {
             trigger: browserRef.current,
@@ -80,28 +71,28 @@ export default function Demo() {
 
   return (
     <section ref={sectionRef} className="relative py-20 sm:py-28">
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/5 blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/[0.04] blur-[120px]" />
 
       <div className="mx-auto max-w-7xl px-6">
         <div ref={headingRef} className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Uma interface que você{" "}
-            <span className="text-gradient">realmente quer usar</span>
+            <span className="text-accent-gradient">realmente quer usar</span>
           </h2>
-          <p className="mt-5 text-lg text-gray-400">
+          <p className="mt-5 text-lg text-[#999]">
             Design moderno, experiência fluida. Cada detalhe pensado para
             produtividade máxima.
           </p>
         </div>
 
         <div ref={browserRef} className="mx-auto mt-16 max-w-5xl will-change-transform">
-          <div className="gradient-border glow-violet-strong rounded-2xl bg-[#030014] p-1.5">
+          <div className="rounded-2xl border border-white/[0.08] bg-surface-raised p-1.5 shadow-2xl shadow-black/30">
             <div className="overflow-hidden rounded-xl">
               <div className="flex items-center gap-2 border-b border-white/5 bg-white/[0.02] px-4 py-3">
                 <div className="flex gap-1.5">
-                  <div className="h-3 w-3 rounded-full bg-red-500/40" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-500/40" />
-                  <div className="h-3 w-3 rounded-full bg-green-500/40" />
+                  <div className="h-3 w-3 rounded-full bg-white/10" />
+                  <div className="h-3 w-3 rounded-full bg-white/10" />
+                  <div className="h-3 w-3 rounded-full bg-white/10" />
                 </div>
                 <div className="mx-auto flex items-center gap-2 rounded-lg bg-white/5 px-4 py-1.5">
                   <svg
@@ -111,12 +102,12 @@ export default function Demo() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="text-gray-600"
+                    className="text-[#555]"
                   >
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-[#555]">
                     app.multipost.com.br
                   </span>
                 </div>

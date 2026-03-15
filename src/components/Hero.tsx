@@ -23,7 +23,7 @@ export default function Hero() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Badge entrance
+      // Badge entrance (quick, non-scroll)
       gsap.from(badgeRef.current, {
         opacity: 0,
         y: 20,
@@ -71,6 +71,8 @@ export default function Hero() {
 
       // Video scroll-scrub: as user scrolls, video plays forward/backward
       if (video) {
+        video.pause();
+
         const setupVideoScrub = () => {
           if (!video.duration) return;
 
@@ -78,7 +80,7 @@ export default function Hero() {
             trigger: videoContainerRef.current,
             start: "top 80%",
             end: "bottom 20%",
-            scrub: 1,
+            scrub: 0.5,
             onUpdate: (self) => {
               if (video.duration) {
                 video.currentTime = self.progress * video.duration;
@@ -90,12 +92,14 @@ export default function Hero() {
         if (video.readyState >= 1) {
           setupVideoScrub();
         } else {
-          video.addEventListener("loadedmetadata", setupVideoScrub, { once: true });
+          video.addEventListener("loadedmetadata", setupVideoScrub, {
+            once: true,
+          });
         }
       }
 
-      // Parallax: text fades out as you scroll (bidirectional)
-      gsap.to([headlineRef.current, subtitleRef.current, ctaRef.current], {
+      // Parallax: text fades out as you scroll (bidirectional via scrub)
+      gsap.to([headlineRef.current, subtitleRef.current, ctaRef.current, badgeRef.current], {
         yPercent: -30,
         opacity: 0,
         ease: "none",
@@ -130,6 +134,8 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
+      id="hero"
+      data-section="hero"
       className="relative min-h-screen overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32"
     >
       {/* Subtle gradient accent */}

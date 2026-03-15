@@ -93,7 +93,7 @@ export default function Networks() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="redes" className="relative py-24 sm:py-32">
+    <section ref={sectionRef} id="redes" data-section="networks" className="relative py-24 sm:py-32">
       <div className="relative mx-auto max-w-7xl px-6">
         <div ref={headingRef} className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">

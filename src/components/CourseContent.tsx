@@ -107,48 +107,26 @@ function ModuleItem({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
 
     const ctx = gsap.context(() => {
-      // Alternate slide from left/right
-      const xFrom = index % 2 === 0 ? -40 : 40;
-      gsap.from(ref.current!, {
-        opacity: 0,
-        x: xFrom,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 85%",
-          once: true,
-        },
-        delay: index * 0.05,
-      });
-
-      // Dot pulse when reached
-      if (dotRef.current) {
-        ScrollTrigger.create({
-          trigger: ref.current!,
-          start: "top 60%",
-          once: true,
-          onEnter: () => {
-            gsap.fromTo(
-              dotRef.current!,
-              { scale: 1 },
-              {
-                scale: 1.3,
-                duration: 0.3,
-                ease: "back.out(2)",
-                yoyo: true,
-                repeat: 1,
-              }
-            );
+      gsap.fromTo(
+        ref.current!,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top 90%",
+            end: "top 70%",
+            scrub: 0.3,
           },
-        });
-      }
+        }
+      );
     }, ref.current);
 
     return () => ctx.revert();
@@ -162,11 +140,10 @@ function ModuleItem({
       >
         <div className="relative flex flex-col items-center">
           <div
-            ref={dotRef}
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-all ${
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold font-display transition-all ${
               open
-                ? "bg-gradient-to-br from-violet-500 to-violet-700 text-white shadow-lg shadow-violet-600/20"
-                : "bg-white/5 text-gray-500 group-hover:bg-violet-500/10 group-hover:text-violet-400"
+                ? "bg-accent text-white shadow-lg shadow-accent/20"
+                : "bg-white/5 text-[#666] group-hover:bg-accent/10 group-hover:text-accent"
             }`}
           >
             {mod.number}
@@ -175,7 +152,7 @@ function ModuleItem({
 
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-white transition-colors group-hover:text-violet-300">
+            <h3 className="font-display font-semibold text-white transition-colors group-hover:text-accent">
               {mod.title}
             </h3>
             <motion.svg
@@ -188,12 +165,12 @@ function ModuleItem({
               strokeLinecap="round"
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="shrink-0 text-gray-600"
+              className="shrink-0 text-[#555]"
             >
               <path d="m6 9 6 6 6-6" />
             </motion.svg>
           </div>
-          <p className="mt-1 text-sm text-gray-500">{mod.description}</p>
+          <p className="mt-1 text-sm text-[#666]">{mod.description}</p>
         </div>
       </button>
 
@@ -206,13 +183,13 @@ function ModuleItem({
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <ul className="mb-4 ml-[60px] space-y-2.5 border-l border-violet-500/10 pl-5">
+            <ul className="mb-4 ml-[60px] space-y-2.5 border-l border-accent/15 pl-5">
               {mod.topics.map((topic) => (
                 <li
                   key={topic}
-                  className="flex items-center gap-2.5 text-sm text-gray-400"
+                  className="flex items-center gap-2.5 text-sm text-[#999]"
                 >
-                  <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/50" />
+                  <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/50" />
                   {topic}
                 </li>
               ))}
@@ -235,37 +212,45 @@ export default function CourseContent() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Header slide from left
-      gsap.from(headerRef.current!, {
-        opacity: 0,
-        x: -40,
-        duration: 0.7,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
+      // Header (bidirectional)
+      gsap.fromTo(
+        headerRef.current!,
+        { opacity: 0, x: -40 },
+        {
+          opacity: 1,
+          x: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            end: "top 60%",
+            scrub: 0.3,
+          },
+        }
+      );
 
-      // Stats counters
+      // Stats (bidirectional)
       if (statsRef.current) {
         const items = statsRef.current.children;
-        gsap.from(items, {
-          opacity: 0,
-          y: 20,
-          stagger: 0.1,
-          duration: 0.5,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        });
+        gsap.fromTo(
+          items,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: statsRef.current,
+              start: "top 85%",
+              end: "top 65%",
+              scrub: 0.3,
+            },
+          }
+        );
       }
 
-      // Timeline line grows with scroll
+      // Timeline line grows with scroll (already bidirectional)
       if (timelineLineRef.current) {
         gsap.fromTo(
           timelineLineRef.current,
@@ -288,16 +273,16 @@ export default function CourseContent() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="conteudo" className="relative py-20 sm:py-28">
+    <section ref={sectionRef} id="conteudo" data-section="content" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-[1fr,1.2fr] lg:items-start">
           {/* Left side - header */}
           <div ref={headerRef} className="lg:sticky lg:top-32">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Do zero ao deploy{" "}
-              <span className="text-gradient">em produção</span>
+              <span className="text-accent-gradient">em produção</span>
             </h2>
-            <p className="mt-5 text-lg text-gray-400">
+            <p className="mt-5 text-lg text-[#999]">
               8 módulos completos. Cada passo documentado, cada configuração
               explicada. Ao final, você terá seu próprio agendador de redes
               sociais rodando.
@@ -309,11 +294,14 @@ export default function CourseContent() {
                 { val: "32+", label: "Aulas" },
                 { val: "∞", label: "Acesso" },
               ].map((item) => (
-                <div key={item.label} className="glass rounded-xl px-4 py-3">
-                  <div className="text-2xl font-bold text-white">
+                <div
+                  key={item.label}
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3"
+                >
+                  <div className="font-display text-2xl font-bold text-white">
                     {item.val}
                   </div>
-                  <div className="text-xs text-gray-500">{item.label}</div>
+                  <div className="text-xs text-[#666]">{item.label}</div>
                 </div>
               ))}
             </div>
@@ -321,10 +309,10 @@ export default function CourseContent() {
 
           {/* Right side - timeline */}
           <div className="relative">
-            {/* Animated timeline line - grows with scroll */}
+            {/* Animated timeline line */}
             <div
               ref={timelineLineRef}
-              className="absolute left-[19px] top-[20px] bottom-[20px] w-px origin-top bg-gradient-to-b from-violet-500/30 via-violet-500/10 to-transparent will-change-transform"
+              className="absolute left-[19px] top-[20px] bottom-[20px] w-px origin-top bg-gradient-to-b from-accent/30 via-accent/10 to-transparent will-change-transform"
               style={{ transformOrigin: "top", transform: "scaleY(0)" }}
             />
 

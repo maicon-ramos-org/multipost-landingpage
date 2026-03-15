@@ -86,7 +86,7 @@ export default function Stats() {
   }, []);
 
   return (
-    <section className="relative py-24 sm:py-32">
+    <section id="stats" data-section="stats" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div ref={sectionRef}>
           <div

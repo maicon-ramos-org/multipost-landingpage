@@ -85,17 +85,17 @@ function FAQItem({
         onClick={() => setOpen(!open)}
         className="group flex w-full items-center justify-between py-6 text-left"
       >
-        <span className="pr-6 font-medium text-white transition-colors group-hover:text-violet-300">
+        <span className="pr-6 font-medium text-white transition-colors group-hover:text-accent">
           {question}
         </span>
         <motion.div
           animate={{
             rotate: open ? 45 : 0,
             borderColor: open
-              ? "rgba(139, 92, 246, 0.3)"
+              ? "rgba(255, 107, 44, 0.3)"
               : "rgba(255, 255, 255, 0.1)",
             backgroundColor: open
-              ? "rgba(139, 92, 246, 0.1)"
+              ? "rgba(255, 107, 44, 0.1)"
               : "rgba(0, 0, 0, 0)",
           }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -109,7 +109,7 @@ function FAQItem({
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
-            className="text-gray-400"
+            className="text-[#999]"
           >
             <path d="M12 5v14" />
             <path d="M5 12h14" />
@@ -125,7 +125,7 @@ function FAQItem({
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-6 leading-relaxed text-gray-400">{answer}</p>
+            <p className="pb-6 leading-relaxed text-[#999]">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -143,34 +143,42 @@ export default function FAQ() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Heading
-      gsap.from(headingRef.current!, {
-        opacity: 0,
-        y: 40,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
+      // Heading (bidirectional)
+      gsap.fromTo(
+        headingRef.current!,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 85%",
+            end: "top 65%",
+            scrub: 0.3,
+          },
+        }
+      );
 
-      // FAQ items stagger from bottom
+      // FAQ items stagger (bidirectional)
       if (containerRef.current) {
         const items = containerRef.current.querySelectorAll(".faq-item");
-        gsap.from(items, {
-          opacity: 0,
-          y: 30,
-          stagger: 0.08,
-          duration: 0.5,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        });
+        gsap.fromTo(
+          items,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.05,
+            ease: "none",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 85%",
+              end: "top 50%",
+              scrub: 0.3,
+            },
+          }
+        );
       }
     }, section);
 
@@ -178,21 +186,21 @@ export default function FAQ() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="faq" className="relative py-20 sm:py-28">
+    <section ref={sectionRef} id="faq" data-section="faq" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <div ref={headingRef} className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Perguntas{" "}
-            <span className="text-gradient">frequentes</span>
+            <span className="text-accent-gradient">frequentes</span>
           </h2>
-          <p className="mt-5 text-lg text-gray-400">
+          <p className="mt-5 text-lg text-[#999]">
             Tudo que você precisa saber antes de começar.
           </p>
         </div>
 
         <div
           ref={containerRef}
-          className="mt-14 glass gradient-border rounded-2xl px-6 sm:px-8"
+          className="mt-14 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 sm:px-8"
         >
           {faqs.map((faq) => (
             <FAQItem key={faq.question} {...faq} />
