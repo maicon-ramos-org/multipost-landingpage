@@ -1,6 +1,6 @@
 # Frontend Design Skill
 
-Read and follow the design guidelines in FRONTEND-DESIGN-SKILL.md before starting.
+Read and follow the design guidelines in .agents/skills/frontend-design/SKILL.md before starting.
 
 ## Key Principles
 - NEVER use generic AI aesthetics (purple gradients on dark bg, Inter font, cookie-cutter layouts)

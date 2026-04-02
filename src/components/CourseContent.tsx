@@ -136,6 +136,7 @@ function ModuleItem({
     <div ref={ref}>
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="group flex w-full items-start gap-5 py-5 text-left"
       >
         <div className="relative flex flex-col items-center">
@@ -143,7 +144,7 @@ function ModuleItem({
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold font-display transition-all ${
               open
                 ? "bg-accent text-white shadow-lg shadow-accent/20"
-                : "bg-white/5 text-[#666] group-hover:bg-accent/10 group-hover:text-accent"
+                : "bg-white/5 text-neutral-400 group-hover:bg-accent/10 group-hover:text-accent-text"
             }`}
           >
             {mod.number}
@@ -165,12 +166,12 @@ function ModuleItem({
               strokeLinecap="round"
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="shrink-0 text-[#555]"
+              className="shrink-0 text-neutral-400"
             >
               <path d="m6 9 6 6 6-6" />
             </motion.svg>
           </div>
-          <p className="mt-1 text-sm text-[#666]">{mod.description}</p>
+          <p className="mt-1 text-sm text-neutral-400">{mod.description}</p>
         </div>
       </button>
 
@@ -187,7 +188,7 @@ function ModuleItem({
               {mod.topics.map((topic) => (
                 <li
                   key={topic}
-                  className="flex items-center gap-2.5 text-sm text-[#999]"
+                  className="flex items-center gap-2.5 text-sm text-neutral-400"
                 >
                   <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/50" />
                   {topic}
@@ -212,7 +213,6 @@ export default function CourseContent() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Header (bidirectional)
       gsap.fromTo(
         headerRef.current!,
         { opacity: 0, x: -40 },
@@ -229,7 +229,6 @@ export default function CourseContent() {
         }
       );
 
-      // Stats (bidirectional)
       if (statsRef.current) {
         const items = statsRef.current.children;
         gsap.fromTo(
@@ -250,7 +249,6 @@ export default function CourseContent() {
         );
       }
 
-      // Timeline line grows with scroll (already bidirectional)
       if (timelineLineRef.current) {
         gsap.fromTo(
           timelineLineRef.current,
@@ -282,10 +280,10 @@ export default function CourseContent() {
               Do zero ao deploy{" "}
               <span className="text-accent-gradient">em produção</span>
             </h2>
-            <p className="mt-5 text-lg text-[#999]">
+            <p className="mt-5 text-lg text-neutral-400">
               8 módulos completos. Cada passo documentado, cada configuração
               explicada. Ao final, você terá seu próprio agendador de redes
-              sociais rodando.
+              sociais rodando no seu servidor.
             </p>
 
             <div ref={statsRef} className="mt-8 flex items-center gap-6">
@@ -301,7 +299,7 @@ export default function CourseContent() {
                   <div className="font-display text-2xl font-bold text-white">
                     {item.val}
                   </div>
-                  <div className="text-xs text-[#666]">{item.label}</div>
+                  <div className="text-xs text-neutral-400">{item.label}</div>
                 </div>
               ))}
             </div>
@@ -309,7 +307,6 @@ export default function CourseContent() {
 
           {/* Right side - timeline */}
           <div className="relative">
-            {/* Animated timeline line */}
             <div
               ref={timelineLineRef}
               className="absolute left-[19px] top-[20px] bottom-[20px] w-px origin-top bg-gradient-to-b from-accent/30 via-accent/10 to-transparent will-change-transform"

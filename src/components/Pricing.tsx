@@ -6,18 +6,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
+const CHECKOUT_URL = "https://pay.hotmart.com/M105160596J?checkoutMode=10";
 
 const included = [
-  "Curso completo com 8 módulos",
+  "Aulas direto ao ponto",
   "Acesso vitalício ao conteúdo",
-  "Código-fonte do Robô MultiPost",
+  "Código-fonte para download",
   "Setup Docker pronto para produção",
   "Integração com IA configurada",
-  "Templates de automação n8n",
-  "Comunidade Automação Sem Limites",
-  "Atualizações futuras inclusas",
-  "Suporte na comunidade",
+  "Suporte remoto 1-a-1 nos primeiros 30 dias",
+  "Acesso à Comunidade no Discord",
+  "Sem limite de Redes Sociais",
+  "Sem Limites de Perfis",
 ];
 
 export default function Pricing() {
@@ -56,7 +56,6 @@ export default function Pricing() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Heading (bidirectional)
       gsap.fromTo(
         headingRef.current!,
         { opacity: 0, y: 40 },
@@ -73,7 +72,6 @@ export default function Pricing() {
         }
       );
 
-      // Card entrance (bidirectional)
       gsap.fromTo(
         cardRef.current!,
         { opacity: 0, scale: 0.9, y: 40 },
@@ -91,7 +89,6 @@ export default function Pricing() {
         }
       );
 
-      // Checkmarks cascade (bidirectional)
       if (listRef.current) {
         const items = listRef.current.children;
         gsap.fromTo(
@@ -112,7 +109,6 @@ export default function Pricing() {
         );
       }
 
-      // 3D tilt on mouse (desktop)
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
         const card = cardRef.current;
@@ -142,143 +138,121 @@ export default function Pricing() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6">
-        <div ref={headingRef} className="mx-auto max-w-3xl text-center">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-            Invista uma vez,{" "}
-            <span className="text-accent-gradient">economize para sempre</span>
-          </h2>
-          <p className="mt-5 text-lg text-[#999]">
-            Enquanto outros pagam R$200+/mês em ferramentas limitadas, você
-            investe uma única vez e tem controle total.
-          </p>
+        <div ref={headingRef} className="mb-16 text-center">
+          <div className="space-y-3">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+              Invista uma vez,{" "}
+              <span className="text-accent-gradient">economize todo mês</span>
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+              Enquanto outros pagam R$200+/mês em ferramentas limitadas, você
+              investe R$297 no treinamento e tem controle total.
+            </p>
+          </div>
         </div>
 
         <div
-          className="mx-auto mt-16 max-w-lg"
+          className="mx-auto max-w-lg"
           style={{ perspective: "1000px" }}
         >
-          <div
-            ref={cardRef}
-            className="rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.04] to-transparent p-8 sm:p-10 will-change-transform shadow-2xl shadow-accent/[0.05]"
-          >
-            {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-              Acesso Completo
-            </div>
+          {/* Electric Card */}
+          <div className="relative bg-neutral-900 rounded-[32px] p-[2px] electric-card overflow-hidden">
+            {/* Glowing Border Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-red-300 via-red-500 to-transparent opacity-80 z-0" />
 
-            {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-lg text-[#555] line-through">R$597</span>
-              <span className="font-display text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
-                R$297
-              </span>
-            </div>
-            <p className="mt-2 text-sm text-[#666]">
-              Pagamento único &bull; Sem mensalidade &bull; Para sempre
-            </p>
+            {/* Inner Card */}
+            <div
+              ref={cardRef}
+              className="relative z-10 bg-[#0A0A0A] rounded-[30px] h-full p-8 sm:p-10 will-change-transform flex flex-col overflow-hidden"
+            >
+              {/* Background glow inside card */}
+              <div className="absolute top-0 right-0 w-full h-40 bg-gradient-to-b from-accent/10 to-transparent pointer-events-none" />
 
-            {/* Divider */}
-            <div className="my-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              {/* Badge */}
+              <div className="relative z-10 mb-6 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent-text self-start">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+                </span>
+                Acesso Completo
+              </div>
 
-            {/* Benefits */}
-            <ul ref={listRef} className="space-y-3.5">
-              {included.map((item) => (
-                <li key={item} className="flex items-start gap-3">
+              {/* Price */}
+              <div className="relative z-10 flex items-baseline gap-3">
+                <span className="text-lg text-neutral-500 line-through">R$597</span>
+                <span className="font-display text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-red-200 to-accent sm:text-6xl">
+                  R$297
+                </span>
+              </div>
+              <p className="relative z-10 mt-2 text-sm text-neutral-400">
+                Pagamento único do curso
+              </p>
+
+              {/* Divider */}
+              <div className="relative z-10 my-8 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
+              {/* Benefits */}
+              <ul ref={listRef} className="relative z-10 space-y-4 mb-10 flex-grow">
+                {included.map((item) => (
+                  <li key={item} className="flex items-center gap-4 group/item">
+                    <div className="flex-none transition-transform group-hover/item:translate-x-1">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#cd282b" className="text-accent">
+                        <path d="M22 12 6 22V2z" stroke="none" />
+                      </svg>
+                    </div>
+                    <span className="text-white text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <a
+                href={CHECKOUT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative z-10 btn-shimmer group w-full py-4 rounded-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 hover:brightness-110 text-white transition-all shadow-[0_8px_30px_-5px_rgba(205,40,43,0.4)] flex items-center justify-center gap-2 border-t border-white/20 hover:shadow-[0_8px_40px_-5px_rgba(205,40,43,0.6)]"
+              >
+                <span className="relative z-10 flex items-center gap-2 text-lg font-bold">
+                  Garantir Minha Vaga
                   <svg
-                    className="check-icon mt-0.5 shrink-0 text-accent"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
                     fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="transition-transform group-hover:translate-x-1"
                   >
-                    <path
-                      d="M20 6L9 17l-5-5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
                   </svg>
-                  <span className="text-[#ccc]">{item}</span>
-                </li>
-              ))}
-            </ul>
+                </span>
+              </a>
 
-            {/* CTA */}
-            <a
-              href={CHECKOUT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-shimmer group mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-4 text-lg font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-[0_20px_60px_rgba(255,107,44,0.25)]"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Garantir Minha Vaga
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="transition-transform group-hover:translate-x-1"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
-                </svg>
-              </span>
-            </a>
-
-            {/* Trust */}
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-[#666]">
-              <span className="flex items-center gap-1.5">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                7 dias de garantia
-              </span>
-              <span className="flex items-center gap-1.5">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
-                </svg>
-                Acesso vitalício
-              </span>
-              <span className="flex items-center gap-1.5">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-                </svg>
-                Suporte incluso
-              </span>
+              {/* Trust */}
+              <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-neutral-400">
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  7 dias de garantia
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
+                  </svg>
+                  Acesso vitalício
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                  </svg>
+                  Suporte agendado
+                </span>
+              </div>
             </div>
           </div>
         </div>

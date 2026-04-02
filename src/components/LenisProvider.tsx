@@ -20,6 +20,8 @@ export default function LenisProvider({
       smoothWheel: true,
     });
     lenisRef.current = lenis;
+    // Expose globally so any component can call smooth scrollTo
+    (window as any).__lenis = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 

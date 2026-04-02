@@ -3,10 +3,10 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -23,53 +23,7 @@ export default function Hero() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Badge entrance (quick, non-scroll)
-      gsap.from(badgeRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power3.out",
-        delay: 0.2,
-      });
-
-      // Headline entrance
-      gsap.from(headlineRef.current, {
-        opacity: 0,
-        y: 40,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.3,
-      });
-
-      // Subtitle
-      gsap.from(subtitleRef.current, {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power3.out",
-        delay: 0.5,
-      });
-
-      // CTA
-      gsap.from(ctaRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: "power3.out",
-        delay: 0.7,
-      });
-
-      // Video container entrance
-      gsap.from(videoContainerRef.current, {
-        opacity: 0,
-        y: 80,
-        scale: 0.95,
-        duration: 1,
-        ease: "power3.out",
-        delay: 0.5,
-      });
-
-      // Video scroll-scrub: as user scrolls, video plays forward/backward
+      // Video scroll-scrub
       if (video) {
         video.pause();
 
@@ -98,30 +52,35 @@ export default function Hero() {
         }
       }
 
-      // Parallax: text fades out as you scroll (bidirectional via scrub)
-      gsap.to([headlineRef.current, subtitleRef.current, ctaRef.current, badgeRef.current], {
-        yPercent: -30,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "60% top",
-          scrub: true,
-        },
-      });
+      // Text fade out on scroll (bidirectional)
+      gsap.fromTo(
+        [badgeRef.current, headlineRef.current, subtitleRef.current, ctaRef.current],
+        { yPercent: 0, opacity: 1 },
+        {
+          yPercent: -20,
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "40% top",
+            scrub: true,
+          },
+        }
+      );
 
-      // Video scale-up as it enters view (bidirectional)
+      // Video reveal: scale up as it enters viewport
       gsap.fromTo(
         videoContainerRef.current,
-        { scale: 0.9 },
+        { scale: 0.92, opacity: 0.6 },
         {
           scale: 1,
+          opacity: 1,
           ease: "none",
           scrollTrigger: {
             trigger: videoContainerRef.current,
             start: "top 90%",
-            end: "top 30%",
+            end: "top 20%",
             scrub: true,
           },
         }
@@ -136,60 +95,59 @@ export default function Hero() {
       ref={sectionRef}
       id="hero"
       data-section="hero"
-      className="relative min-h-screen overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32"
+      className="relative overflow-hidden pt-32 pb-0 sm:pt-30"
     >
-      {/* Subtle gradient accent */}
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-accent/[0.04] blur-[150px]" />
+      {/* Radial glow accent */}
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[900px] rounded-full bg-accent/[0.07] blur-[160px]" />
 
+      {/* Hero content */}
       <div className="relative mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-4xl text-center">
-          {/* Badge */}
-          <div
-            ref={badgeRef}
-            className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/[0.08] px-5 py-2 text-sm text-accent"
+        {/* Badge */}
+        <div
+          ref={badgeRef}
+          className="hero-entrance hero-entrance-delay-1 mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs text-neutral-300"
+        >
+          <svg
+            className="w-3 h-3 text-accent"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
           >
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            Comunidade Automação Sem Limites
-          </div>
+            <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
+          </svg>
+          Software Self-hosted
+        </div>
 
-          {/* Headline */}
+        {/* Title row: huge title left, CTA bottom-right */}
+        <div className="flex items-end justify-between gap-8">
+          {/* Headline — takes most of the width */}
           <h1
             ref={headlineRef}
-            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
+            className="hero-entrance hero-entrance-delay-2 font-display text-5xl font-extrabold leading-[1.0] tracking-tight sm:text-6xl lg:text-7xl xl:text-6xl max-w-[70%]"
           >
-            Publique em{" "}
-            <span className="text-accent-gradient">todas as redes</span>
-            <br className="hidden sm:block" />{" "}
-            com um único clique
+            PUBLIQUE EM{" "}
+            <span className="text-accent-gradient">TODAS AS REDES</span>{" "}
+            COM UM ÚNICO CLIQUE
           </h1>
 
-          <p
-            ref={subtitleRef}
-            className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-[#999] sm:text-xl"
-          >
-            Agendador de redes sociais self-hosted com{" "}
-            <span className="font-medium text-white">IA integrada</span>,{" "}
-            <span className="font-medium text-white">33+ canais</span> e{" "}
-            <span className="font-medium text-white">zero mensalidade</span>.
-            Rode no seu servidor, automatize com n8n, escale sem limites.
-          </p>
-
-          {/* CTA */}
+          {/* CTA — pinned to bottom-right */}
           <div
             ref={ctaRef}
-            className="mt-10 flex flex-col items-center gap-5 sm:flex-row sm:justify-center"
+            className="hero-entrance hero-entrance-delay-3 flex flex-col items-end gap-3 shrink-0 pb-2"
           >
             <a
-              href={CHECKOUT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-shimmer group rounded-full bg-accent px-10 py-4 text-lg font-bold text-white transition-all hover:bg-accent-hover hover:shadow-2xl hover:shadow-accent/25 hover:-translate-y-0.5"
+              href="#preco"
+              onClick={(e) => { e.preventDefault(); smoothScrollTo("#preco"); }}
+              className="btn-shimmer group relative flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-t from-red-700 via-red-500 to-red-400 px-7 py-3.5 text-base font-bold text-white shadow-[0_0_40px_-5px_rgba(205,40,43,0.6)] ring-1 ring-inset ring-white/30 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-5px_rgba(205,40,43,0.8)] whitespace-nowrap"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Quero o Robô MultiPost
+                Quero o Treinamento
                 <svg
-                  width="20"
-                  height="20"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -203,44 +161,72 @@ export default function Hero() {
                 </svg>
               </span>
             </a>
-            <div className="flex flex-col items-center sm:items-start">
-              <span className="text-sm text-[#666]">
+            <div className="flex flex-col items-end">
+              <span className="text-sm text-neutral-400">
                 Por apenas{" "}
-                <span className="font-bold text-accent">R$297</span>
+                <span className="font-bold text-accent-text">R$297</span>
               </span>
-              <span className="text-xs text-[#555]">
+              <span className="text-xs text-neutral-400">
                 Pagamento único &bull; Acesso vitalício
               </span>
             </div>
           </div>
         </div>
 
-        {/* Video with scroll-scrub */}
-        <div ref={videoContainerRef} className="mx-auto mt-20 max-w-5xl will-change-transform">
-          <div className="rounded-2xl border border-white/[0.08] bg-surface-raised overflow-hidden shadow-2xl shadow-black/50">
+        {/* Subtitle — below title row */}
+        <p
+          ref={subtitleRef}
+          className="hero-entrance hero-entrance-delay-4 mt-6 max-w-xl text-base leading-relaxed text-neutral-500"
+        >
+          Gestão de redes sociais auto-hospedada para agências, empresas e criadores que desejam controle total. <br></br>{" "}
+          <span className="text-neutral-300">IA integrada</span>,{" "}
+          <span className="text-neutral-300">+33 canais</span> e{" "}
+          <span className="text-neutral-300">sem limites de planos</span>.
+        </p>
+      </div>
+
+      {/* Video — full width below, gradient fade at bottom */}
+      <div
+        ref={videoContainerRef}
+        className="hero-entrance hero-entrance-delay-5 relative mt-16 sm:mt-20 will-change-transform"
+      >
+        {/* Side glows */}
+        <div className="pointer-events-none absolute -inset-x-10 top-0 h-[60%] bg-accent/[0.04] blur-[80px]" />
+
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="relative rounded-t-2xl border border-b-0 border-white/[0.08] bg-surface-raised overflow-hidden shadow-[0_-8px_80px_-10px_rgba(205,40,43,0.2),0_0_0_1px_rgba(255,255,255,0.04)]">
             {/* Browser chrome */}
-            <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
+            <div
+              aria-hidden="true"
+              className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3 bg-white/[0.02]"
+            >
               <div className="flex gap-1.5">
                 <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
                 <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
                 <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
               </div>
-              <div className="mx-auto rounded-md bg-white/5 px-4 py-1 text-xs text-[#555]">
+              <div className="mx-auto rounded-md bg-white/5 px-4 py-1 text-xs text-neutral-600">
                 app.multipost.com.br
               </div>
             </div>
+
+            {/* Video */}
             <div className="aspect-video bg-black">
               <video
                 ref={videoRef}
-                src="https://postiz.com/videos/hero.webm"
+                src="/videos/hero.webm"
                 muted
                 playsInline
+                aria-hidden="true"
                 preload="auto"
                 className="h-full w-full object-cover"
               />
             </div>
           </div>
         </div>
+
+        {/* Bottom gradient — fades into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
       </div>
     </section>
   );

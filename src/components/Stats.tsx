@@ -1,58 +1,16 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function AnimatedCounter({
-  target,
-  suffix = "",
-  triggerRef,
-}: {
-  target: number;
-  suffix?: string;
-  triggerRef: React.RefObject<HTMLDivElement | null>;
-}) {
-  const [count, setCount] = useState(0);
-  const countRef = useRef({ val: 0 });
-
-  useEffect(() => {
-    if (!triggerRef.current) return;
-
-    const trigger = ScrollTrigger.create({
-      trigger: triggerRef.current,
-      start: "top 80%",
-      once: true,
-      onEnter: () => {
-        gsap.to(countRef.current, {
-          val: target,
-          duration: 2,
-          ease: "power3.out",
-          onUpdate: () => {
-            setCount(Math.floor(countRef.current.val));
-          },
-        });
-      },
-    });
-
-    return () => trigger.kill();
-  }, [target, triggerRef]);
-
-  return (
-    <span>
-      {count.toLocaleString("pt-BR")}
-      {suffix}
-    </span>
-  );
-}
-
 const stats = [
-  { value: 33, suffix: "+", label: "Canais Suportados" },
-  { value: 27000, suffix: "+", label: "Stars no GitHub" },
-  { value: 0, suffix: "R$", label: "Mensalidade", displayValue: "R$0" },
-  { value: 100, suffix: "%", label: "Self-Hosted" },
+  { value: "+33", label: "Canais Suportados" },
+  { value: "MCP", label: "API e Agents CLI" },
+  { value: "IA", label: "integrada" },
+  { value: "100%", label: "Self-Hosted" },
 ];
 
 export default function Stats() {
@@ -91,22 +49,17 @@ export default function Stats() {
         <div ref={sectionRef}>
           <div
             ref={itemsRef}
-            className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/[0.06]"
+            className="grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-0"
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center lg:px-8">
-                <div className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-                  {stat.displayValue ? (
-                    stat.displayValue
-                  ) : (
-                    <AnimatedCounter
-                      target={stat.value}
-                      suffix={stat.suffix}
-                      triggerRef={sectionRef}
-                    />
-                  )}
+              <div
+                key={stat.label}
+                className="text-center lg:px-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] py-8 lg:border-0 lg:bg-transparent lg:rounded-none lg:border-r lg:border-white/[0.06] last:border-r-0"
+              >
+                <div className="font-display text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-red-200 to-accent sm:text-5xl md:text-6xl">
+                  {stat.value}
                 </div>
-                <p className="mt-2 text-sm text-[#666] sm:text-base">
+                <p className="mt-2 text-sm text-neutral-400 sm:text-base">
                   {stat.label}
                 </p>
               </div>

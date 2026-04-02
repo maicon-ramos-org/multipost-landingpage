@@ -4,10 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CHECKOUT_URL = "https://pay.hotmart.com/P100926086P?checkoutMode=10";
+const CHECKOUT_URL = "https://pay.hotmart.com/M105160596J?checkoutMode=10";
 
 const navLinks = [
   { label: "Funcionalidades", href: "#funcionalidades" },
@@ -20,6 +21,7 @@ const navLinks = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("#hero");
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -30,7 +32,28 @@ export default function Header() {
       },
     });
 
-    return () => trigger.kill();
+    // Active section: find which nav section's top is closest above the viewport midpoint
+    const navIds = navLinks.map((l) => l.href.replace("#", ""));
+
+    const updateActive = () => {
+      const mid = window.scrollY + window.innerHeight * 0.35;
+      let current = navIds[0];
+      for (const id of navIds) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= mid) {
+          current = id;
+        }
+      }
+      setActiveSection(`#${current}`);
+    };
+
+    window.addEventListener("scroll", updateActive, { passive: true });
+    updateActive();
+
+    return () => {
+      trigger.kill();
+      window.removeEventListener("scroll", updateActive);
+    };
   }, []);
 
   return (
@@ -40,43 +63,59 @@ export default function Header() {
       data-section="header"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/[0.06]"
+          ? "bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.06]"
           : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        {/* Logo */}
         <a href="#" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/logo-text.svg"
+            src="/images/multipost-logo-dark.svg"
             alt="MultiPost"
             className="h-7"
           />
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="rounded-full px-4 py-2 text-sm text-[#999] transition-all hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+        {/* Pill Navigation */}
+        <nav aria-label="Navegação principal" className="hidden items-center md:flex">
+          <div className="flex items-center rounded-full border border-white/10 bg-white/5 px-1 py-1 backdrop-blur-md">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => { e.preventDefault(); smoothScrollTo(link.href); }}
+                  className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs transition-all duration-300 ${
+                    isActive
+                      ? "bg-white/10 text-white border border-white/5 shadow-inner"
+                      : "text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  {isActive && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+                  )}
+                  {link.label}
+                </a>
+              );
+            })}
+          </div>
+
           <a
-            href={CHECKOUT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-4 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
+            href="#preco"
+            onClick={(e) => { e.preventDefault(); smoothScrollTo("#preco"); }}
+            className="ml-4 rounded-full bg-gradient-to-b from-red-500 to-red-700 border-t border-white/20 px-6 py-2 text-sm font-semibold text-white transition-all shadow-[0_0_15px_-3px_rgba(205,40,43,0.4)] hover:brightness-110 hover:shadow-[0_0_25px_-3px_rgba(205,40,43,0.6)]"
           >
-            Garantir Acesso
+            Começar o Treinamento
           </a>
         </nav>
 
+        {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-[#999] transition-colors hover:bg-white/5 hover:text-white md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/5 hover:text-white md:hidden"
           aria-label="Menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -102,26 +141,25 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-white/5 bg-[#0A0A0A]/95 backdrop-blur-xl md:hidden"
+            className="overflow-hidden border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl md:hidden"
           >
-            <nav className="flex flex-col gap-1 px-6 py-4">
+            <nav aria-label="Navegação principal" className="flex flex-col gap-1 px-6 py-4">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-4 py-3 text-sm text-[#999] transition-colors hover:bg-white/5 hover:text-white"
+                  onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo(link.href); }}
+                  className="rounded-lg px-4 py-3 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
                 >
                   {link.label}
                 </a>
               ))}
               <a
-                href={CHECKOUT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#preco"
+                onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo("#preco"); }}
                 className="mt-2 rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white"
               >
-                Garantir Acesso
+                Começar o Treinamento
               </a>
             </nav>
           </motion.div>

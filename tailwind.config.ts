@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ["var(--font-syne)", "system-ui", "sans-serif"],
+        display: ["var(--font-jakarta)", "system-ui", "sans-serif"],
         body: ["var(--font-jakarta)", "system-ui", "sans-serif"],
       },
       colors: {
@@ -19,9 +19,10 @@ const config: Config = {
           overlay: "#1A1A1A",
         },
         accent: {
-          DEFAULT: "#FF6B2C",
-          hover: "#FF8F5E",
-          subtle: "rgba(255, 107, 44, 0.1)",
+          DEFAULT: "#cd282b",
+          hover: "#e03236",
+          text: "#f06365",
+          subtle: "rgba(205, 40, 43, 0.1)",
         },
         muted: "#737373",
         border: "#262626",

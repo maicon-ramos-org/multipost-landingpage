@@ -9,9 +9,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 const faqs = [
   {
-    question: "Preciso saber programar para usar o Robô MultiPost?",
+    question: "Preciso saber programar para fazer o treinamento?",
     answer:
-      "Não! O curso foi desenhado para qualquer pessoa conseguir fazer o deploy. Você vai seguir um passo a passo completo com Docker, e tudo é feito via interface web. Porém, se você souber programar, terá ainda mais poder para customizar.",
+      "O curso foi pensado para pessoas com disposição para aprender o básico de servidores. Você vai seguir um passo a passo completo com Docker — não precisa ser programador, mas ter familiaridade com terminal e não ter medo de configurar coisas ajuda muito. Se nunca usou um terminal, pode ser desafiador. Se já mexeu com WordPress em VPS, n8n, ou qualquer ferramenta self-hosted, vai se sentir em casa.",
+  },
+  {
+    question: "O que preciso além do curso para começar?",
+    answer:
+      "Você vai precisar alugar um VPS (servidor virtual) — recomendamos no mínimo 2GB RAM e 2 vCPU, que custa entre R$30-50/mês. Também precisará criar contas de desenvolvedor nas redes sociais que quiser conectar (Meta, TikTok, etc.) e seguir o processo de aprovação de cada uma. O curso mostra tudo isso em detalhe, mas é importante saber que existe esse investimento de tempo e infraestrutura além do valor do treinamento.",
+  },
+  {
+    question: "Isso é um SaaS ou preciso instalar em um servidor?",
+    answer:
+      "O MultiPost não é um SaaS onde você cria uma conta e sai usando. É um software self-hosted — você instala no seu próprio servidor e tem controle total. O curso ensina todo o processo: desde alugar o VPS, instalar Docker, configurar o MultiPost, até conectar cada rede social. Pense como um curso de n8n: você aprende a instalar, configurar e usar, mas a infraestrutura é sua.",
   },
   {
     question: "Quanto custa manter o servidor rodando?",
@@ -83,6 +93,7 @@ function FAQItem({
     <div className="faq-item border-b border-white/5 last:border-b-0">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="group flex w-full items-center justify-between py-6 text-left"
       >
         <span className="pr-6 font-medium text-white transition-colors group-hover:text-accent">
@@ -92,10 +103,10 @@ function FAQItem({
           animate={{
             rotate: open ? 45 : 0,
             borderColor: open
-              ? "rgba(255, 107, 44, 0.3)"
+              ? "rgba(205, 40, 43, 0.3)"
               : "rgba(255, 255, 255, 0.1)",
             backgroundColor: open
-              ? "rgba(255, 107, 44, 0.1)"
+              ? "rgba(205, 40, 43, 0.1)"
               : "rgba(0, 0, 0, 0)",
           }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -109,7 +120,7 @@ function FAQItem({
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
-            className="text-[#999]"
+            className="text-neutral-400"
           >
             <path d="M12 5v14" />
             <path d="M5 12h14" />
@@ -125,7 +136,7 @@ function FAQItem({
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-6 leading-relaxed text-[#999]">{answer}</p>
+            <p className="pb-6 leading-relaxed text-neutral-400">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -135,32 +146,50 @@ function FAQItem({
 
 export default function FAQ() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Heading (bidirectional)
       gsap.fromTo(
-        headingRef.current!,
-        { opacity: 0, y: 40 },
+        headerRef.current!,
+        { opacity: 0, x: -40 },
         {
           opacity: 1,
-          y: 0,
+          x: 0,
           ease: "none",
           scrollTrigger: {
-            trigger: headingRef.current,
+            trigger: headerRef.current,
             start: "top 85%",
-            end: "top 65%",
+            end: "top 60%",
             scrub: 0.3,
           },
         }
       );
 
-      // FAQ items stagger (bidirectional)
+      if (statsRef.current) {
+        gsap.fromTo(
+          statsRef.current.children,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: statsRef.current,
+              start: "top 85%",
+              end: "top 65%",
+              scrub: 0.3,
+            },
+          }
+        );
+      }
+
       if (containerRef.current) {
         const items = containerRef.current.querySelectorAll(".faq-item");
         gsap.fromTo(
@@ -187,24 +216,48 @@ export default function FAQ() {
 
   return (
     <section ref={sectionRef} id="faq" data-section="faq" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl px-6">
-        <div ref={headingRef} className="text-center">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-            Perguntas{" "}
-            <span className="text-accent-gradient">frequentes</span>
-          </h2>
-          <p className="mt-5 text-lg text-[#999]">
-            Tudo que você precisa saber antes de começar.
-          </p>
-        </div>
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid gap-16 lg:grid-cols-[1fr,1.2fr] lg:items-start">
 
-        <div
-          ref={containerRef}
-          className="mt-14 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 sm:px-8"
-        >
-          {faqs.map((faq) => (
-            <FAQItem key={faq.question} {...faq} />
-          ))}
+          {/* Left — sticky header */}
+          <div ref={headerRef} className="lg:sticky lg:top-32">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+              Perguntas{" "}
+              <span className="text-accent-gradient">frequentes</span>
+            </h2>
+            <p className="mt-5 text-lg text-neutral-400">
+              Tudo que você precisa saber antes de começar.
+            </p>
+
+            <div ref={statsRef} className="mt-8 flex items-center gap-6">
+              {[
+                { val: `${faqs.length}`, label: "Perguntas" },
+                { val: "7d", label: "Garantia" },
+                { val: "1:1", label: "Suporte" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3"
+                >
+                  <div className="font-display text-2xl font-bold text-white">
+                    {item.val}
+                  </div>
+                  <div className="text-xs text-neutral-400">{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — FAQ list */}
+          <div
+            ref={containerRef}
+            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 sm:px-8"
+          >
+            {faqs.map((faq) => (
+              <FAQItem key={faq.question} {...faq} />
+            ))}
+          </div>
+
         </div>
       </div>
     </section>
