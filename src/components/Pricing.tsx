@@ -15,7 +15,7 @@ const included = [
   "Setup Docker pronto para produção",
   "Integração com IA configurada",
   "Suporte remoto 1-a-1 nos primeiros 30 dias",
-  "Acesso à Comunidade no Discord",
+  "API, MCP e CLI Agent inclusos",
   "Sem limite de Redes Sociais",
   "Sem Limites de Perfis",
 ];
@@ -131,7 +131,7 @@ export default function Pricing() {
   }, [handleMouseMove, handleMouseLeave]);
 
   return (
-    <section ref={sectionRef} id="preco" data-section="pricing" className="relative py-24 sm:py-32">
+    <section ref={sectionRef} id="preco" data-section="pricing" className="relative overflow-hidden py-24 sm:py-32">
       {/* Subtle glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/[0.06] blur-[150px]" />
@@ -142,6 +142,7 @@ export default function Pricing() {
           <div className="space-y-3">
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Invista uma vez,{" "}
+              <br className="sm:hidden" />
               <span className="text-accent-gradient">economize todo mês</span>
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-neutral-400">

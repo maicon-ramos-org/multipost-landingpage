@@ -81,8 +81,8 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
     <article
       className="training-card relative shrink-0 flex flex-col rounded-2xl overflow-hidden cursor-default"
       style={{
-        width: "clamp(300px, 28vw, 440px)",
-        height: "clamp(340px, 55vh, 490px)",
+        width: "clamp(260px, 72vw, 440px)",
+        height: "clamp(300px, 55vh, 490px)",
         background: "rgba(12,12,12,0.97)",
         border: "1px solid rgba(255,255,255,0.06)",
       }}
@@ -160,12 +160,8 @@ export default function TrainingSteps() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only activate on desktop
-    if (window.innerWidth < 1024) return;
-
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
@@ -224,26 +220,6 @@ export default function TrainingSteps() {
     };
   }, []);
 
-  // Mobile: simple GSAP scroll-in per card
-  useEffect(() => {
-    if (window.innerWidth >= 1024) return;
-    const container = mobileRef.current;
-    if (!container) return;
-
-    const ctx = gsap.context(() => {
-      container.querySelectorAll(".training-card").forEach((card) => {
-        gsap.fromTo(card,
-          { opacity: 0, y: 28 },
-          {
-            opacity: 1, y: 0, ease: "none",
-            scrollTrigger: { trigger: card, start: "top 90%", end: "top 68%", scrub: 0.3 },
-          }
-        );
-      });
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
 
   const LEFT_PAD = "max(2rem, calc((100vw - 80rem) / 2 + 1.5rem))";
 
@@ -255,7 +231,7 @@ export default function TrainingSteps() {
           Sticky inner: position:sticky top:0, clips overflow
           Track: flex row, translated by scroll progress
       ──────────────────────────────────────────────────────────── */}
-      <div ref={sectionRef} className="hidden lg:block relative">
+      <div ref={sectionRef} className="relative">
         <div
           ref={stickyRef}
           className="sticky top-0 overflow-hidden flex flex-col"
@@ -263,17 +239,17 @@ export default function TrainingSteps() {
         >
           {/* Label — always visible at top of sticky area */}
           <div
-            className="shrink-0 pt-14 pb-8 text-center"
+            className="shrink-0 pt-8 lg:pt-14 pb-6 lg:pb-8 text-center"
             style={{ paddingLeft: LEFT_PAD, paddingRight: LEFT_PAD }}
           >
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-4">
               O Roadmap
             </p>
-            <h2 className="font-display text-5xl xl:text-6xl font-bold tracking-tight leading-[1.05]">
+            <h2 className="font-display text-3xl sm:text-4xl xl:text-6xl font-bold tracking-tight leading-[1.05]">
               Como funciona{" "}
               <span className="text-accent-gradient">o treinamento</span>
             </h2>
-            <p className="mt-3 text-neutral-400 text-lg">
+            <p className="mt-3 text-neutral-400 text-sm lg:text-lg">
               8 aulas. Do zero ao multi-cliente em produção.  Ao final, você terá seu próprio agendador de redes sociais rodando no seu servidor.
             </p>
           </div>
@@ -293,29 +269,6 @@ export default function TrainingSteps() {
         </div>
       </div>
 
-      {/* ── MOBILE ──────────────────────────────────────────────── */}
-      <div className="lg:hidden">
-        <div className="px-6 pt-20 pb-10 text-center">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-3">
-            02 — Treinamento
-          </p>
-          <h2 className="font-display text-4xl font-bold tracking-tight leading-[1.1]">
-            Como funciona{" "}
-            <span className="text-accent-gradient">o treinamento</span>
-          </h2>
-          <p className="mt-3 text-neutral-400 text-lg">
-            8 aulas. Do zero ao multi-cliente em produção.
-          </p>
-        </div>
-        <div
-          ref={mobileRef}
-          className="px-6 pb-24 flex flex-col gap-6 sm:grid sm:grid-cols-2"
-        >
-          {steps.map((step, i) => (
-            <StepCard key={step.number} step={step} index={i} />
-          ))}
-        </div>
-      </div>
 
     </section>
   );

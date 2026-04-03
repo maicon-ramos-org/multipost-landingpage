@@ -8,8 +8,6 @@ import { smoothScrollTo } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CHECKOUT_URL = "https://pay.hotmart.com/M105160596J?checkoutMode=10";
-
 const navLinks = [
   { label: "Funcionalidades", href: "#funcionalidades" },
   { label: "Redes", href: "#redes" },
@@ -61,19 +59,20 @@ export default function Header() {
       ref={headerRef}
       id="header"
       data-section="header"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`relative md:fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.06]"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        {/* Logo */}
-        <a href="#" className="flex items-center">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 relative">
+        {/* Logo — centered on mobile, left-aligned on desktop */}
+        <a href="#" className="flex items-center absolute left-1/2 -translate-x-1/2 md:static md:left-auto md:translate-x-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/multipost-logo-dark.svg"
             alt="MultiPost"
+            fetchPriority="high"
             className="h-7"
           />
         </a>
@@ -115,7 +114,7 @@ export default function Header() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/5 hover:text-white md:hidden"
+          className="hidden"
           aria-label="Menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

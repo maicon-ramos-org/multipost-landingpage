@@ -16,12 +16,12 @@ const faqs = [
   {
     question: "O que preciso além do curso para começar?",
     answer:
-      "Você vai precisar alugar um VPS (servidor virtual) — recomendamos no mínimo 2GB RAM e 2 vCPU, que custa entre R$30-50/mês. Também precisará criar contas de desenvolvedor nas redes sociais que quiser conectar (Meta, TikTok, etc.) e seguir o processo de aprovação de cada uma. O curso mostra tudo isso em detalhe, mas é importante saber que existe esse investimento de tempo e infraestrutura além do valor do treinamento.",
+      "Você vai precisar alugar um VPS (servidor virtual) — recomendamos no mínimo 2GB RAM e 2 vCPU, que custa entre R$30-50/mês. Também precisará criar contas de desenvolvedor nas redes sociais que quiser conectar e seguir o processo de aprovação de cada uma. É importante saber que existe esse investimento de tempo e infraestrutura além do valor do treinamento.",
   },
   {
     question: "Isso é um SaaS ou preciso instalar em um servidor?",
     answer:
-      "O MultiPost não é um SaaS onde você cria uma conta e sai usando. É um software self-hosted — você instala no seu próprio servidor e tem controle total. O curso ensina todo o processo: desde alugar o VPS, instalar Docker, configurar o MultiPost, até conectar cada rede social. Pense como um curso de n8n: você aprende a instalar, configurar e usar, mas a infraestrutura é sua.",
+      "O MultiPost não é um SaaS onde você cria uma conta e sai usando. É um software self-hosted — você instala no seu próprio servidor e tem controle total. O curso ensina o processo de instalação e configuração do MultiPost, além de orientações gerais sobre como conectar as redes sociais. Vale lembrar que cada plataforma tem seu próprio processo de aprovação de desenvolvedor, que está fora do nosso controle.",
   },
   {
     question: "Quanto custa manter o servidor rodando?",
@@ -31,22 +31,17 @@ const faqs = [
   {
     question: "Posso usar em mais de uma conta ou rede social?",
     answer:
-      "Sim, pode utilizar em quantas contas e redes sociais desejar, sem limites. O sistema suporta 33+ canais nativamente — Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Pinterest, e muito mais.",
+      "Sim, pode utilizar em quantas contas e redes sociais desejar, sem limites. O sistema suporta 25+ canais nativamente — Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Pinterest, e muito mais.",
   },
   {
     question: "Vou ter algum suporte?",
     answer:
-      "SIM! Temos suporte via ticket no Discord para tirar dúvidas a qualquer momento. Além disso, nos primeiros 30 dias, se ocorrer qualquer erro, você tem suporte remoto 1 a 1 com nossa equipe via compartilhamento de tela.",
+      "SIM! Nos primeiros 30 dias após a compra, você pode agendar uma sessão de suporte remoto 1 a 1 com nossa equipe via compartilhamento de tela para solucionar erros que possam surgir durante o processo das aulas.",
   },
   {
-    question: "Por quanto tempo terei acesso ao curso?",
+    question: "Vocês instalam e configuram tudo para mim?",
     answer:
-      "O acesso ao curso é durante 1 ano. Isso significa que você pode estudar no seu tempo e ainda terá acesso a novos módulos e atualizações durante esse período.",
-  },
-  {
-    question: "Depois de 1 ano preciso renovar o acesso?",
-    answer:
-      "O acesso de 1 ano é às aulas na Hotmart e aos grupos. Caso queira continuar tendo acesso a eles e a atualizações futuras, você pode renovar. Já o Robô MultiPost, depois de baixado e instalado na sua estrutura, é seu para sempre.",
+      "Este treinamento não inclui serviço de instalação ou implementação. As aulas ensinam você a fazer tudo passo a passo, e o suporte remoto existe para corrigir erros pontuais que surjam durante esse processo de aprendizado. Caso prefira que alguém implemente o MultiPost para você, isso é possível como um serviço à parte — entre em contato conosco para saber mais.",
   },
   {
     question: "O que acontece se eu não gostar do curso?",
@@ -54,19 +49,9 @@ const faqs = [
       "Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, é só solicitar o cancelamento direto na Hotmart e devolvemos 100% do seu investimento.",
   },
   {
-    question: "Qual a diferença do MultiPost para o Postiz original?",
+    question: "Funciona com n8n, Claude Code e OpenClaw?",
     answer:
-      "O Robô MultiPost é um fork do Postiz adaptado para o público brasileiro, com documentação em português, integrações extras, templates de automação para n8n e o curso completo ensinando tudo do zero.",
-  },
-  {
-    question: "Funciona com n8n?",
-    answer:
-      "Sim! O MultiPost tem API pública e webhooks completos. No curso, há um módulo dedicado à integração com n8n, incluindo templates prontos de fluxos de automação.",
-  },
-  {
-    question: "A IA é gratuita ou preciso pagar?",
-    answer:
-      "A integração com IA usa o framework Mastra + MCP. Você pode conectar qualquer LLM — incluindo modelos gratuitos e open source. Se usar APIs pagas como OpenAI ou Claude, o custo é diretamente com o provedor (geralmente centavos por uso).",
+      "Sim! O MultiPost conta com API pública, MCP (Model Context Protocol) e CLI Agent nativos, o que permite integração direta com n8n, Claude Code, OpenClaw e qualquer outra ferramenta compatível com esse padrão.",
   },
   {
     question: "O conteúdo publicado é seguro para as redes sociais?",
@@ -220,7 +205,7 @@ export default function FAQ() {
         <div className="grid gap-16 lg:grid-cols-[1fr,1.2fr] lg:items-start">
 
           {/* Left — sticky header */}
-          <div ref={headerRef} className="lg:sticky lg:top-32">
+          <div ref={headerRef} className="lg:sticky lg:top-32 text-center lg:text-left">
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Perguntas{" "}
               <span className="text-accent-gradient">frequentes</span>
@@ -229,7 +214,7 @@ export default function FAQ() {
               Tudo que você precisa saber antes de começar.
             </p>
 
-            <div ref={statsRef} className="mt-8 flex items-center gap-6">
+            <div ref={statsRef} className="mt-8 flex items-center justify-center lg:justify-start gap-6">
               {[
                 { val: `${faqs.length}`, label: "Perguntas" },
                 { val: "7d", label: "Garantia" },

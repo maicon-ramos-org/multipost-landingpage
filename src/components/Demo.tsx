@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,7 +11,7 @@ export default function Demo() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const browserRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -114,14 +115,16 @@ export default function Demo() {
               </div>
 
               <div className="overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  ref={imgRef}
-                  src="https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Planning.3f9ff858.png&w=1920&q=75"
-                  alt="Postiz - Calendário de agendamento"
-                  className="w-full will-change-transform"
-                  loading="lazy"
-                />
+                <div ref={imgRef} className="will-change-transform">
+                  <Image
+                    src="https://postiz.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTool-Planning.3f9ff858.png&w=1920&q=75"
+                    alt="Postiz - Calendário de agendamento"
+                    width={1920}
+                    height={1080}
+                    className="w-full"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           </div>

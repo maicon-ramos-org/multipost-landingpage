@@ -95,7 +95,7 @@ export default function Hero() {
       ref={sectionRef}
       id="hero"
       data-section="hero"
-      className="relative overflow-hidden pt-32 pb-0 sm:pt-30"
+      className="relative overflow-hidden pt-6 md:pt-32 pb-0"
     >
       {/* Radial glow accent */}
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[900px] rounded-full bg-accent/[0.07] blur-[160px]" />
@@ -105,7 +105,7 @@ export default function Hero() {
         {/* Badge */}
         <div
           ref={badgeRef}
-          className="hero-entrance hero-entrance-delay-1 mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs text-neutral-300"
+          className="hero-entrance hero-entrance-delay-1 mb-6 flex md:inline-flex justify-center md:justify-start items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs text-neutral-300"
         >
           <svg
             className="w-3 h-3 text-accent"
@@ -121,22 +121,32 @@ export default function Hero() {
           Software Self-hosted
         </div>
 
-        {/* Title row: huge title left, CTA bottom-right */}
-        <div className="flex items-end justify-between gap-8">
-          {/* Headline — takes most of the width */}
+        {/* Title row: huge title left, CTA bottom-right on desktop; stacked on mobile */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 md:gap-8">
+          {/* Headline */}
           <h1
             ref={headlineRef}
-            className="hero-entrance hero-entrance-delay-2 font-display text-5xl font-extrabold leading-[1.0] tracking-tight sm:text-6xl lg:text-7xl xl:text-6xl max-w-[70%]"
+            className="hero-entrance hero-entrance-delay-2 font-display text-[1.9rem] leading-[1.05] font-extrabold tracking-tight sm:text-5xl lg:text-7xl xl:text-6xl md:max-w-[70%] text-center md:text-left"
           >
-            PUBLIQUE EM{" "}
-            <span className="text-accent-gradient">TODAS AS REDES</span>{" "}
-            COM UM ÚNICO CLIQUE
+            A FERRAMENTA QUE{" "}
+            <br />
+            <span className="text-accent-gradient">AS AGÊNCIAS USAM</span>
+            <br />
+            AGORA É SUA
           </h1>
 
-          {/* CTA — pinned to bottom-right */}
+          {/* Subtitle — mobile only (between title and CTA) */}
+          <p className="hero-entrance hero-entrance-delay-4 md:hidden text-sm leading-relaxed text-neutral-500 text-center">
+            Gestão de redes sociais auto-hospedada para agências, empresas e criadores que desejam controle total.{" "}
+            <span className="text-neutral-300">IA integrada</span>,{" "}
+            <span className="text-neutral-300">+33 canais</span> e{" "}
+            <span className="text-neutral-300">sem limites de planos</span>.
+          </p>
+
+          {/* CTA */}
           <div
             ref={ctaRef}
-            className="hero-entrance hero-entrance-delay-3 flex flex-col items-end gap-3 shrink-0 pb-2"
+            className="hero-entrance hero-entrance-delay-3 flex flex-col items-center md:items-end gap-3 md:shrink-0 md:pb-2"
           >
             <a
               href="#preco"
@@ -161,7 +171,7 @@ export default function Hero() {
                 </svg>
               </span>
             </a>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-center md:items-end">
               <span className="text-sm text-neutral-400">
                 Por apenas{" "}
                 <span className="font-bold text-accent-text">R$297</span>
@@ -173,10 +183,10 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Subtitle — below title row */}
+        {/* Subtitle — desktop only, below title row */}
         <p
           ref={subtitleRef}
-          className="hero-entrance hero-entrance-delay-4 mt-6 max-w-xl text-base leading-relaxed text-neutral-500"
+          className="hero-entrance hero-entrance-delay-4 hidden md:block mt-6 max-w-xl text-base leading-relaxed text-neutral-500"
         >
           Gestão de redes sociais auto-hospedada para agências, empresas e criadores que desejam controle total. <br></br>{" "}
           <span className="text-neutral-300">IA integrada</span>,{" "}

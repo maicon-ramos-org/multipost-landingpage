@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://raw.githubusercontent.com/maiconramos/robo-multipost/refs/heads/main/apps/frontend/public/postiz.svg"
+              src="/images/postiz-icon.svg"
               alt="MultiPost"
               width={28}
               height={28}

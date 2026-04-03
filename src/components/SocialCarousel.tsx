@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 const socialLogos = [
   { name: "Instagram", src: "/images/social/instagram.png" },
@@ -64,11 +65,11 @@ export default function SocialCarousel() {
               key={`${logo.name}-${index}`}
               className="group flex flex-none items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] pl-2.5 pr-5 py-2 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.07] hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(205,40,43,0.3)] backdrop-blur-md"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={logo.src}
                 alt={logo.name}
-                loading="lazy"
+                width={40}
+                height={40}
                 className="h-10 w-10 shrink-0 rounded-full object-cover transition-all duration-500 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105 border border-white/10 group-hover:border-accent/30 shadow-lg"
               />
               <span className="text-sm font-medium text-neutral-400 transition-colors duration-500 group-hover:text-white">
