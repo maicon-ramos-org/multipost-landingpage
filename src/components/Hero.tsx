@@ -228,7 +228,7 @@ export default function Hero() {
                 muted
                 playsInline
                 aria-hidden="true"
-                preload="auto"
+                preload="metadata"
                 className="h-full w-full object-cover"
               />
             </div>

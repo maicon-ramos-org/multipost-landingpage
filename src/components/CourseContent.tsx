@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -156,7 +155,7 @@ function ModuleItem({
             <h3 className="font-display font-semibold text-white transition-colors group-hover:text-accent">
               {mod.title}
             </h3>
-            <motion.svg
+            <svg
               width="20"
               height="20"
               viewBox="0 0 24 24"
@@ -164,40 +163,35 @@ function ModuleItem({
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
-              animate={{ rotate: open ? 180 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="shrink-0 text-neutral-400"
+              className="shrink-0 text-neutral-400 transition-transform duration-300"
+              style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
             >
               <path d="m6 9 6 6 6-6" />
-            </motion.svg>
+            </svg>
           </div>
           <p className="mt-1 text-sm text-neutral-400">{mod.description}</p>
         </div>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
-            <ul className="mb-4 ml-[60px] space-y-2.5 border-l border-accent/15 pl-5">
-              {mod.topics.map((topic) => (
-                <li
-                  key={topic}
-                  className="flex items-center gap-2.5 text-sm text-neutral-400"
-                >
-                  <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/50" />
-                  {topic}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className="overflow-hidden transition-all duration-300"
+        style={{
+          maxHeight: open ? "400px" : "0px",
+          opacity: open ? 1 : 0,
+        }}
+      >
+        <ul className="mb-4 ml-[60px] space-y-2.5 border-l border-accent/15 pl-5">
+          {mod.topics.map((topic) => (
+            <li
+              key={topic}
+              className="flex items-center gap-2.5 text-sm text-neutral-400"
+            >
+              <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/50" />
+              {topic}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import LenisProvider from "@/components/LenisProvider";
-import CustomCursor from "@/components/CustomCursor";
+import dynamic from "next/dynamic";
 import {
   GoogleTagManagerScript,
   GoogleTagManagerNoscript,
 } from "@/components/GoogleTagManager";
 import TrackingProvider from "@/components/TrackingProvider";
 
+const LenisProvider = dynamic(() => import("@/components/LenisProvider"), {
+  ssr: false,
+});
+const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
+  ssr: false,
+});
+
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-jakarta",
   display: "swap",
 });

@@ -1,15 +1,21 @@
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import SocialCarousel from "@/components/SocialCarousel";
-import Stats from "@/components/Stats";
-import Features from "@/components/Features";
-import TrainingSteps from "@/components/TrainingSteps";
-import Pricing from "@/components/Pricing";
-import FAQ from "@/components/FAQ";
-import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import GradFlowBackground from "@/components/GradFlowBackground";
+
+// Below-the-fold components: lazy loaded
+const Stats = dynamic(() => import("@/components/Stats"));
+const Features = dynamic(() => import("@/components/Features"));
+const TrainingSteps = dynamic(() => import("@/components/TrainingSteps"));
+const Pricing = dynamic(() => import("@/components/Pricing"));
+const FAQ = dynamic(() => import("@/components/FAQ"));
+const Footer = dynamic(() => import("@/components/Footer"));
+const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"));
+const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"));
+const GradFlowBackground = dynamic(
+  () => import("@/components/GradFlowBackground"),
+  { ssr: false }
+);
 
 export default function Home() {
   return (
@@ -22,7 +28,7 @@ export default function Home() {
         <SocialCarousel />
         <Stats />
         <Features />
-<TrainingSteps />
+        <TrainingSteps />
         <Pricing />
         <FAQ />
       </main>

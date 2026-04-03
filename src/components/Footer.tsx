@@ -1,5 +1,3 @@
-"use client";
-
 const CHECKOUT_URL = "https://pay.hotmart.com/M105160596J?checkoutMode=10";
 
 const links = [
@@ -61,8 +59,7 @@ export default function Footer() {
           <p className="text-sm text-neutral-400">
             Comunidade{" "}
             <span className="text-accent-text">Automação Sem Limites</span>
-            {" "}&mdash; Todos os direitos reservados &copy;{" "}
-            {new Date().getFullYear()}
+            {" "}&mdash; Todos os direitos reservados &copy; 2026
           </p>
         </div>
       </div>

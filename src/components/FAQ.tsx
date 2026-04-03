@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -73,6 +72,7 @@ function FAQItem({
   answer: string;
 }) {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="faq-item border-b border-white/5 last:border-b-0">
@@ -84,18 +84,13 @@ function FAQItem({
         <span className="pr-6 font-medium text-white transition-colors group-hover:text-accent">
           {question}
         </span>
-        <motion.div
-          animate={{
-            rotate: open ? 45 : 0,
-            borderColor: open
-              ? "rgba(205, 40, 43, 0.3)"
-              : "rgba(255, 255, 255, 0.1)",
-            backgroundColor: open
-              ? "rgba(205, 40, 43, 0.1)"
-              : "rgba(0, 0, 0, 0)",
+        <div
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-300"
+          style={{
+            transform: open ? "rotate(45deg)" : "rotate(0deg)",
+            borderColor: open ? "rgba(205, 40, 43, 0.3)" : "rgba(255, 255, 255, 0.1)",
+            backgroundColor: open ? "rgba(205, 40, 43, 0.1)" : "transparent",
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border"
         >
           <svg
             width="14"
@@ -110,21 +105,18 @@ function FAQItem({
             <path d="M12 5v14" />
             <path d="M5 12h14" />
           </svg>
-        </motion.div>
+        </div>
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="pb-6 leading-relaxed text-neutral-400">{answer}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        ref={contentRef}
+        className="overflow-hidden transition-all duration-300"
+        style={{
+          maxHeight: open ? `${contentRef.current?.scrollHeight ?? 200}px` : "0px",
+          opacity: open ? 1 : 0,
+        }}
+      >
+        <p className="pb-6 leading-relaxed text-neutral-400">{answer}</p>
+      </div>
     </div>
   );
 }
@@ -204,7 +196,6 @@ export default function FAQ() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-[1fr,1.2fr] lg:items-start">
 
-          {/* Left — sticky header */}
           <div ref={headerRef} className="lg:sticky lg:top-32 text-center lg:text-left">
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Perguntas{" "}
@@ -233,7 +224,6 @@ export default function FAQ() {
             </div>
           </div>
 
-          {/* Right — FAQ list */}
           <div
             ref={containerRef}
             className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 sm:px-8"

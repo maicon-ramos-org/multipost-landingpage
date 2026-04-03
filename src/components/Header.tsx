@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { smoothScrollTo } from "@/lib/smoothScroll";
@@ -30,7 +29,6 @@ export default function Header() {
       },
     });
 
-    // Active section: find which nav section's top is closest above the viewport midpoint
     const navIds = navLinks.map((l) => l.href.replace("#", ""));
 
     const updateActive = () => {
@@ -66,7 +64,6 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 relative">
-        {/* Logo — centered on mobile, left-aligned on desktop */}
         <a href="#" className="flex items-center absolute left-1/2 -translate-x-1/2 md:static md:left-auto md:translate-x-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -77,7 +74,6 @@ export default function Header() {
           />
         </a>
 
-        {/* Pill Navigation */}
         <nav aria-label="Navegação principal" className="hidden items-center md:flex">
           <div className="flex items-center rounded-full border border-white/10 bg-white/5 px-1 py-1 backdrop-blur-md">
             {navLinks.map((link) => {
@@ -111,7 +107,6 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="hidden"
@@ -133,37 +128,33 @@ export default function Header() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl md:hidden"
+      <div
+        className="overflow-hidden border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl md:hidden transition-all duration-200"
+        style={{
+          maxHeight: menuOpen ? "400px" : "0px",
+          opacity: menuOpen ? 1 : 0,
+        }}
+      >
+        <nav aria-label="Navegação principal" className="flex flex-col gap-1 px-6 py-4">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo(link.href); }}
+              className="rounded-lg px-4 py-3 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="#preco"
+            onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo("#preco"); }}
+            className="mt-2 rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white"
           >
-            <nav aria-label="Navegação principal" className="flex flex-col gap-1 px-6 py-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo(link.href); }}
-                  className="rounded-lg px-4 py-3 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="#preco"
-                onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo("#preco"); }}
-                className="mt-2 rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white"
-              >
-                Começar o Treinamento
-              </a>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            Começar o Treinamento
+          </a>
+        </nav>
+      </div>
     </header>
   );
 }
