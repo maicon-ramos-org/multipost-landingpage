@@ -146,7 +146,7 @@ export default function Pricing() {
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-neutral-400">
               Enquanto outros pagam R$200+/mês em ferramentas limitadas, você
-              investe R$297 no treinamento e tem controle total.
+              investe R$197 no treinamento e tem controle total.
             </p>
           </div>
         </div>
@@ -181,7 +181,7 @@ export default function Pricing() {
               <div className="relative z-10 flex items-baseline gap-3">
                 <span className="text-lg text-neutral-500 line-through">R$597</span>
                 <span className="font-display text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-red-200 to-accent sm:text-6xl">
-                  R$297
+                  R$197
                 </span>
               </div>
               <p className="relative z-10 mt-2 text-sm text-neutral-400">
