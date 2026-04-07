@@ -9,8 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { label: "Funcionalidades", href: "#funcionalidades" },
-  { label: "Redes", href: "#redes" },
-  { label: "Conteúdo", href: "#conteudo" },
+  { label: "Como funciona", href: "#treinamento" },
   { label: "Preço", href: "#preco" },
   { label: "FAQ", href: "#faq" },
 ];
@@ -103,7 +102,7 @@ export default function Header() {
             onClick={(e) => { e.preventDefault(); smoothScrollTo("#preco"); }}
             className="ml-4 rounded-full bg-gradient-to-b from-red-500 to-red-700 border-t border-white/20 px-6 py-2 text-sm font-semibold text-white transition-all shadow-[0_0_15px_-3px_rgba(205,40,43,0.4)] hover:brightness-110 hover:shadow-[0_0_25px_-3px_rgba(205,40,43,0.6)]"
           >
-            Começar o Treinamento
+            Garantir Acesso
           </a>
         </nav>
 
@@ -151,7 +150,7 @@ export default function Header() {
             onClick={(e) => { e.preventDefault(); setMenuOpen(false); smoothScrollTo("#preco"); }}
             className="mt-2 rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white"
           >
-            Começar o Treinamento
+            Garantir Acesso
           </a>
         </nav>
       </div>

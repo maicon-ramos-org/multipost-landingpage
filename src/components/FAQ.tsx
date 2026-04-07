@@ -18,6 +18,11 @@ const faqs = [
       "Você vai precisar alugar um VPS (servidor virtual) — recomendamos no mínimo 2GB RAM e 2 vCPU, que custa entre R$30-50/mês. Também precisará criar contas de desenvolvedor nas redes sociais que quiser conectar e seguir o processo de aprovação de cada uma. É importante saber que existe esse investimento de tempo e infraestrutura além do valor do treinamento.",
   },
   {
+    question: "Preciso configurar cada rede social separadamente?",
+    answer:
+      "Sim. Para cada rede social que quiser usar, você precisará criar conta de desenvolvedor, chaves de API ou Apps nas plataformas, para conectar ao MultiPost. Algumas plataformas, como TikTok e Pinterest, exigem aprovação prévia antes para liberar o acesso — esse processo é feito diretamente com cada rede social. Cada plataforma tem suas próprias regras e prazos de aprovação.",
+  },
+  {
     question: "Isso é um SaaS ou preciso instalar em um servidor?",
     answer:
       "O MultiPost não é um SaaS onde você cria uma conta e sai usando. É um software self-hosted — você instala no seu próprio servidor e tem controle total. O curso ensina o processo de instalação e configuração do MultiPost, além de orientações gerais sobre como conectar as redes sociais. Vale lembrar que cada plataforma tem seu próprio processo de aprovação de desenvolvedor, que está fora do nosso controle.",

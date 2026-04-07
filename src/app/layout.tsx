@@ -25,7 +25,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Robô MultiPost — Domine Todas as Redes Sociais com IA",
   description:
-    "Treinamento completo para instalar e dominar o Robô MultiPost: agendador self-hosted de redes sociais com IA, 33+ canais e n8n. 8 módulos, 32+ videoaulas por R$297.",
+    "Treinamento completo para instalar e dominar o Robô MultiPost: agendador self-hosted de redes sociais com IA, 33+ canais e n8n. 8 módulos, 32+ videoaulas por R$197.",
   keywords: [
     "agendador de redes sociais",
     "automação redes sociais",

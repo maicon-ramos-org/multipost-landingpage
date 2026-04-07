@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 const CHECKOUT_URL = "https://pay.hotmart.com/M105160596J?checkoutMode=10";
 
 const included = [
-  "Aulas direto ao ponto",
+  "Mini-curso de instalação",
   "Acesso vitalício ao conteúdo",
   "Código-fonte para download",
   "Setup Docker pronto para produção",

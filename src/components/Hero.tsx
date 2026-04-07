@@ -154,7 +154,7 @@ export default function Hero() {
               className="btn-shimmer group relative flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-t from-red-700 via-red-500 to-red-400 px-7 py-3.5 text-base font-bold text-white shadow-[0_0_40px_-5px_rgba(205,40,43,0.6)] ring-1 ring-inset ring-white/30 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-5px_rgba(205,40,43,0.8)] whitespace-nowrap"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Quero o Treinamento
+                Garantir Acesso
                 <svg
                   width="18"
                   height="18"
@@ -174,7 +174,7 @@ export default function Hero() {
             <div className="flex flex-col items-center md:items-end">
               <span className="text-sm text-neutral-400">
                 Por apenas{" "}
-                <span className="font-bold text-accent-text">R$297</span>
+                <span className="font-bold text-accent-text">R$197</span>
               </span>
               <span className="text-xs text-neutral-400">
                 Pagamento único &bull; Acesso vitalício
