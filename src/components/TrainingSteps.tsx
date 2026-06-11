@@ -13,13 +13,8 @@ const steps = [
     subtitle: "Visão geral da plataforma",
     description:
       "Entenda a arquitetura completa do Multipost: como o agendador funciona, como as filas processam as publicações e o que acontece por baixo dos panos em cada post.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="2" />
-        <path d="M24 16v8l5 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M10 24H8M40 24h-2M24 10V8M24 40v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-      </svg>
-    ),
+    image: "/images/modulos/01-como-funciona",
+    alt: "Diagrama da plataforma Multipost: equipe, agendamento, painel de redes sociais e publicação automática",
   },
   {
     number: "02",
@@ -27,14 +22,8 @@ const steps = [
     subtitle: "Do zero ao servidor rodando",
     description:
       "Instale o Multipost do zero no seu VPS com Docker passo a passo. Aprenda também como manter a ferramenta sempre atualizada sem perder suas configurações.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <rect x="8" y="6" width="32" height="24" rx="3" stroke="currentColor" strokeWidth="2" />
-        <path d="M24 30v8" stroke="currentColor" strokeWidth="2" />
-        <path d="M16 38h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M18 18l4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    image: "/images/modulos/02-instalacao",
+    alt: "Instalação e atualização do Multipost no VPS com Docker",
   },
   {
     number: "03",
@@ -42,18 +31,8 @@ const steps = [
     subtitle: "Instagram, LinkedIn, YouTube, X e mais",
     description:
       "Conecte Instagram, Facebook, Threads, LinkedIn, YouTube e X (Twitter) passo a passo: criação de apps, OAuth e tokens. Aprenda também a usar a Zernio API para liberar dezenas redes sociais sem complicação.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="2" />
-        <circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.3" />
-        <circle cx="24" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="36" cy="20" r="3" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="36" cy="32" r="3" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="12" cy="20" r="3" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="12" cy="32" r="3" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="24" cy="38" r="3" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
-    ),
+    image: "/images/modulos/03-redes-sociais",
+    alt: "Conexão das redes sociais Instagram, Facebook, LinkedIn, YouTube, X e Threads via OAuth",
   },
   {
     number: "04",
@@ -61,14 +40,8 @@ const steps = [
     subtitle: "Replicação automática de posts",
     description:
       "Postou no Instagram? O Repost replica automaticamente para suas outras redes sociais, no estilo Repostify. Configure uma vez e cada publicação vira conteúdo em todos os canais ao mesmo tempo.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <path d="M12 20v-2a5 5 0 0 1 5-5h17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M29 8l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M36 28v2a5 5 0 0 1-5 5H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M19 40l-5-5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    image: "/images/modulos/04-repost",
+    alt: "Repost replicando um post do Instagram para todas as outras redes sociais",
   },
   {
     number: "05",
@@ -76,12 +49,8 @@ const steps = [
     subtitle: "Agente, persona, imagem e vídeo",
     description:
       "Crie conteúdo com inteligência artificial: configure o Agente de IA e a Persona da sua marca, gere imagens e vídeos com IA e use o IA Search para buscar na web e fazer scraping de referências.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <path d="M22 8l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M36 24l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" opacity="0.5" />
-      </svg>
-    ),
+    image: "/images/modulos/05-conteudo-ia",
+    alt: "Criação de conteúdo com IA: agente, persona, geração de imagem e vídeo e busca na web",
   },
   {
     number: "06",
@@ -89,12 +58,8 @@ const steps = [
     subtitle: "Comentários e DM automáticos",
     description:
       "Crie automações no estilo ManyChat: responda comentários automaticamente e envie mensagens na DM com link ou botão. Transforme cada interação em oportunidade de venda sem esforço manual.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <path d="M9 11a3 3 0 0 1 3-3h24a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H22l-8 7v-7h-2a3 3 0 0 1-3-3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M25 12l-6 9h5l-1 7 6-9h-5z" fill="currentColor" opacity="0.3" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      </svg>
-    ),
+    image: "/images/modulos/06-automacao",
+    alt: "Automação de comentários e DM no estilo ManyChat com link e botão",
   },
   {
     number: "07",
@@ -102,14 +67,8 @@ const steps = [
     subtitle: "n8n, MCP e agentes de IA",
     description:
       "Integre o Multipost via API: use no n8n com template pronto para download e conecte a agentes de IA como Claude, Hermes Agente e Openclaw através do MCP para publicar de forma autônoma.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <path d="M17 16l-7 8 7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M31 16l7 8-7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="24" cy="24" r="3" fill="currentColor" opacity="0.4" />
-        <path d="M24 18v-4M24 34v-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
-      </svg>
-    ),
+    image: "/images/modulos/07-api-mcp",
+    alt: "Integração via API e MCP com n8n, Claude, Hermes Agente e Openclaw",
   },
   {
     number: "08",
@@ -117,16 +76,8 @@ const steps = [
     subtitle: "Logs, multi-cliente e aprovação",
     description:
       "Use o Temporal UI para monitorar filas e debugar publicações com logs avançados. Configure múltiplos clientes em uma só instalação e envie o link de um post para o cliente aprovar antes de publicar.",
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
-        <rect x="6" y="10" width="36" height="6" rx="2" stroke="currentColor" strokeWidth="2" />
-        <rect x="6" y="21" width="36" height="6" rx="2" stroke="currentColor" strokeWidth="2" />
-        <rect x="6" y="32" width="36" height="6" rx="2" stroke="currentColor" strokeWidth="2" />
-        <circle cx="14" cy="13" r="2" fill="currentColor" opacity="0.5" />
-        <circle cx="14" cy="24" r="2" fill="currentColor" opacity="0.5" />
-        <circle cx="14" cy="35" r="2" fill="currentColor" opacity="0.8" />
-      </svg>
-    ),
+    image: "/images/modulos/08-recursos-avancados",
+    alt: "Recursos avançados: Temporal UI, logs, multi-cliente e fluxo de aprovação",
   },
 ];
 
@@ -137,62 +88,82 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
     <article
       className="training-card relative shrink-0 flex flex-col rounded-2xl overflow-hidden cursor-default"
       style={{
-        width: "clamp(260px, 72vw, 440px)",
-        height: "clamp(300px, 55vh, 490px)",
+        width: "clamp(258px, 72vw, 392px)",
+        height: "clamp(460px, 70vh, 560px)",
         background: "rgba(12,12,12,0.97)",
         border: "1px solid rgba(255,255,255,0.06)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Image — top of card, preserves the 4:3 infographic, no crop */}
+      <div className="relative shrink-0 overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
+        <picture>
+          <source srcSet={`${step.image}.avif`} type="image/avif" />
+          <img
+            src={`${step.image}.webp`}
+            alt={step.alt}
+            width={880}
+            height={660}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out"
+            style={{ transform: hovered ? "scale(1.06)" : "scale(1)" }}
+          />
+        </picture>
+        {/* Fade the image into the card body */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(12,12,12,0.97) 0%, rgba(12,12,12,0.5) 45%, transparent 100%)",
+          }}
+        />
+        {/* Number badge */}
+        <span
+          className="absolute left-3.5 top-3.5 flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 font-display text-xs font-bold tracking-widest transition-colors duration-500"
+          style={{
+            background: "rgba(0,0,0,0.5)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: hovered ? "var(--color-accent-text,#f06365)" : "#e5e5e5",
+          }}
+        >
+          {step.number}
+        </span>
+      </div>
+
+      {/* Hover glow + accent border */}
       <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-0"
         style={{
           background:
-            "radial-gradient(ellipse at -5% -5%, rgba(205,40,43,0.28) 0%, rgba(205,40,43,0.08) 30%, transparent 60%)",
+            "radial-gradient(ellipse at 50% 120%, rgba(205,40,43,0.22) 0%, rgba(205,40,43,0.06) 40%, transparent 70%)",
           opacity: hovered ? 1 : 0,
         }}
       />
       <div
-        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500"
-        style={{ border: "1px solid rgba(205,40,43,0.18)", opacity: hovered ? 1 : 0 }}
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500 z-20"
+        style={{ border: "1px solid rgba(205,40,43,0.2)", opacity: hovered ? 1 : 0 }}
       />
 
-      <div className="relative z-10 flex flex-col h-full p-8 lg:p-9">
-        <div className="flex items-start justify-between">
-          <span
-            className="font-display text-sm font-bold tracking-widest transition-colors duration-500"
-            style={{ color: hovered ? "var(--color-accent-text,#f06365)" : "#a3a3a3" }}
-          >
-            {step.number}
-          </span>
-          <div
-            className="w-16 h-16 transition-all duration-500"
-            style={{
-              color: hovered ? "var(--color-accent-text,#f06365)" : "rgba(255,255,255,0.1)",
-              transform: hovered ? "scale(1.12) rotate(-4deg)" : "scale(1) rotate(0deg)",
-            }}
-          >
-            {step.icon}
-          </div>
-        </div>
+      {/* Content */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col p-6 lg:p-7">
+        <p
+          className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2 transition-colors duration-500"
+          style={{ color: hovered ? "var(--color-accent-text,#f06365)" : "#a3a3a3" }}
+        >
+          {step.subtitle}
+        </p>
+        <h3 className="font-display text-xl lg:text-2xl font-bold text-white leading-tight tracking-tight">
+          {step.title}
+        </h3>
+        <p className="mt-2.5 text-sm leading-relaxed text-neutral-400 line-clamp-3">
+          {step.description}
+        </p>
 
-        <div className="mt-auto">
-          <p
-            className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2 transition-colors duration-500"
-            style={{ color: hovered ? "var(--color-accent-text,#f06365)" : "#a3a3a3" }}
-          >
-            {step.subtitle}
-          </p>
-          <h3 className="font-display text-2xl lg:text-[1.7rem] font-bold text-white leading-tight tracking-tight">
-            {step.title}
-          </h3>
-          <p className="mt-3 text-sm lg:text-[14px] leading-relaxed text-neutral-400">
-            {step.description}
-          </p>
-        </div>
-
-        <div className="mt-5 flex items-center gap-[6px]">
+        <div className="mt-auto flex items-center gap-[6px] pt-4">
           {steps.map((_, i) => (
             <div
               key={i}
