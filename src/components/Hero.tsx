@@ -174,7 +174,7 @@ export default function Hero() {
             <div className="flex flex-col items-center md:items-end">
               <span className="text-sm text-neutral-400">
                 Por apenas{" "}
-                <span className="font-bold text-accent-text">R$197</span>
+                <span className="font-bold text-accent-text">R$297</span>
               </span>
               <span className="text-xs text-neutral-400">
                 Pagamento único &bull; Acesso vitalício

@@ -39,9 +39,9 @@ const steps = [
   {
     number: "03",
     title: "Redes Sociais",
-    subtitle: "Instagram, Facebook e Threads",
+    subtitle: "Instagram, LinkedIn, YouTube, X e mais",
     description:
-      "Configure o Instagram, Facebook e Threads passo a passo: criação de apps na Meta, OAuth, tokens de acesso e todas as permissões necessárias para publicar sem erros.",
+      "Conecte Instagram, Facebook, Threads, LinkedIn, YouTube e X (Twitter) passo a passo: criação de apps, OAuth e tokens. Aprenda também a usar a Zernio API para liberar dezenas redes sociais sem complicação.",
     icon: (
       <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
         <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="2" />
@@ -57,10 +57,66 @@ const steps = [
   },
   {
     number: "04",
-    title: "Recursos Avançados",
-    subtitle: "Logs, multi-cliente e Late API",
+    title: "Repost",
+    subtitle: "Replicação automática de posts",
     description:
-      "Use o Temporal UI para monitorar filas e debugar publicações com logs avançados. Configure múltiplos clientes em uma só instalação e integre a Late API para escalar sua operação.",
+      "Postou no Instagram? O Repost replica automaticamente para suas outras redes sociais, no estilo Repostify. Configure uma vez e cada publicação vira conteúdo em todos os canais ao mesmo tempo.",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
+        <path d="M12 20v-2a5 5 0 0 1 5-5h17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M29 8l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M36 28v2a5 5 0 0 1-5 5H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M19 40l-5-5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    number: "05",
+    title: "Conteúdo com IA",
+    subtitle: "Agente, persona, imagem e vídeo",
+    description:
+      "Crie conteúdo com inteligência artificial: configure o Agente de IA e a Persona da sua marca, gere imagens e vídeos com IA e use o IA Search para buscar na web e fazer scraping de referências.",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
+        <path d="M22 8l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M36 24l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" opacity="0.5" />
+      </svg>
+    ),
+  },
+  {
+    number: "06",
+    title: "Automação 'EU QUERO'",
+    subtitle: "Comentários e DM automáticos",
+    description:
+      "Crie automações no estilo ManyChat: responda comentários automaticamente e envie mensagens na DM com link ou botão. Transforme cada interação em oportunidade de venda sem esforço manual.",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
+        <path d="M9 11a3 3 0 0 1 3-3h24a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H22l-8 7v-7h-2a3 3 0 0 1-3-3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M25 12l-6 9h5l-1 7 6-9h-5z" fill="currentColor" opacity="0.3" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    number: "07",
+    title: "API & MCP para Agentes",
+    subtitle: "n8n, MCP e agentes de IA",
+    description:
+      "Integre o Multipost via API: use no n8n com template pronto para download e conecte a agentes de IA como Claude, Hermes Agente e Openclaw através do MCP para publicar de forma autônoma.",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
+        <path d="M17 16l-7 8 7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M31 16l7 8-7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="24" cy="24" r="3" fill="currentColor" opacity="0.4" />
+        <path d="M24 18v-4M24 34v-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+      </svg>
+    ),
+  },
+  {
+    number: "08",
+    title: "Recursos Avançados",
+    subtitle: "Logs, multi-cliente e aprovação",
+    description:
+      "Use o Temporal UI para monitorar filas e debugar publicações com logs avançados. Configure múltiplos clientes em uma só instalação e envie o link de um post para o cliente aprovar antes de publicar.",
     icon: (
       <svg viewBox="0 0 48 48" fill="none" className="w-full h-full" aria-hidden="true">
         <rect x="6" y="10" width="36" height="6" rx="2" stroke="currentColor" strokeWidth="2" />
@@ -250,7 +306,7 @@ export default function TrainingSteps() {
               <span className="text-accent-gradient">o treinamento</span>
             </h2>
             <p className="mt-3 text-neutral-400 text-sm lg:text-lg">
-              8 aulas. Do zero ao multi-cliente em produção.  Ao final, você terá seu próprio agendador de redes sociais rodando no seu servidor.
+              8 módulos. Do zero ao multi-cliente, com IA, automações e API.<br /> Ao final, você terá seu próprio agendador de redes sociais rodando no seu servidor.
             </p>
           </div>
 

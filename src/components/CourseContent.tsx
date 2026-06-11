@@ -140,11 +140,10 @@ function ModuleItem({
       >
         <div className="relative flex flex-col items-center">
           <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold font-display transition-all ${
-              open
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold font-display transition-all ${open
                 ? "bg-accent text-white shadow-lg shadow-accent/20"
                 : "bg-white/5 text-neutral-400 group-hover:bg-accent/10 group-hover:text-accent-text"
-            }`}
+              }`}
           >
             {mod.number}
           </div>

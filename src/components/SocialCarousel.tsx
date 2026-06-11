@@ -3,7 +3,15 @@
 import React from "react";
 import Image from "next/image";
 
-const socialLogos = [
+type SocialLogo = {
+  name: string;
+  src: string;
+  /** Wide horizontal logo: render full-width without the circular crop or text label. */
+  wordmark?: boolean;
+};
+
+const socialLogos: SocialLogo[] = [
+  { name: "Zernio", src: "/images/social/zernio.svg", wordmark: true },
   { name: "Instagram", src: "/images/social/instagram.png" },
   { name: "Youtube", src: "/images/social/youtube.svg" },
   { name: "Facebook", src: "/images/social/facebook.png" },
@@ -33,13 +41,10 @@ const socialLogos = [
   { name: "ListMonk", src: "/images/social/listmonk.png" },
   { name: "Openclaw", src: "/images/social/moltbook.png" },
   { name: "Nostr", src: "/images/social/nostr.png" },
-  { name: "Late", src: "/images/social/late.png" },
   { name: "Wrapcast", src: "/images/social/wrapcast.png" },
   { name: "Facebook Page", src: "/images/social/facebook-page.png" },
-  { name: "Instagram Page", src: "/images/social/instagram-page.png" },
   { name: "LinkedIn Page", src: "/images/social/linkedin-page.png" },
   { name: "Threads Alt", src: "/images/social/threads-alt.png" },
-  { name: "Instagram Pro", src: "/images/social/instagram-standalone.png" },
 ];
 
 export default function SocialCarousel() {
@@ -60,23 +65,38 @@ export default function SocialCarousel() {
       >
         {/* Marquee Container */}
         <div className="flex w-fit animate-marquee items-center gap-6 px-12">
-          {[...socialLogos, ...socialLogos].map((logo, index) => (
-            <div
-              key={`${logo.name}-${index}`}
-              className="group flex flex-none items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] pl-2.5 pr-5 py-2 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.07] hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(205,40,43,0.3)] backdrop-blur-md"
-            >
-              <Image
-                src={logo.src}
-                alt={logo.name}
-                width={40}
-                height={40}
-                className="h-10 w-10 shrink-0 rounded-full object-cover transition-all duration-500 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105 border border-white/10 group-hover:border-accent/30 shadow-lg"
-              />
-              <span className="text-sm font-medium text-neutral-400 transition-colors duration-500 group-hover:text-white">
-                {logo.name}
-              </span>
-            </div>
-          ))}
+          {[...socialLogos, ...socialLogos].map((logo, index) =>
+            logo.wordmark ? (
+              <div
+                key={`${logo.name}-${index}`}
+                className="group flex flex-none items-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 py-2 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.07] hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(205,40,43,0.3)] backdrop-blur-md"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.name}
+                  width={190}
+                  height={40}
+                  className="h-10 w-auto shrink-0 object-contain transition-all duration-500 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105"
+                />
+              </div>
+            ) : (
+              <div
+                key={`${logo.name}-${index}`}
+                className="group flex flex-none items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] pl-2.5 pr-5 py-2 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.07] hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(205,40,43,0.3)] backdrop-blur-md"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.name}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 shrink-0 rounded-full object-cover transition-all duration-500 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105 border border-white/10 group-hover:border-accent/30 shadow-lg"
+                />
+                <span className="text-sm font-medium text-neutral-400 transition-colors duration-500 group-hover:text-white">
+                  {logo.name}
+                </span>
+              </div>
+            )
+          )}
         </div>
       </div>
     </section>
