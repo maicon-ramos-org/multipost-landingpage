@@ -224,7 +224,7 @@ export default function Hero() {
             <div className="aspect-video bg-black">
               <video
                 ref={videoRef}
-                src="/videos/hero.webm"
+                src="/videos/hero-agentic.webm"
                 muted
                 playsInline
                 aria-hidden="true"

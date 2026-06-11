@@ -6,6 +6,7 @@ import SocialCarousel from "@/components/SocialCarousel";
 // Below-the-fold components: lazy loaded
 const Stats = dynamic(() => import("@/components/Stats"));
 const Features = dynamic(() => import("@/components/Features"));
+const AIAutomation = dynamic(() => import("@/components/AIAutomation"));
 const TrainingSteps = dynamic(() => import("@/components/TrainingSteps"));
 const Pricing = dynamic(() => import("@/components/Pricing"));
 const FAQ = dynamic(() => import("@/components/FAQ"));
@@ -28,6 +29,7 @@ export default function Home() {
         <SocialCarousel />
         <Stats />
         <Features />
+        <AIAutomation />
         <TrainingSteps />
         <Pricing />
         <FAQ />

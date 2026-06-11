@@ -12,42 +12,56 @@ const features = [
     title: "Calendário Inteligente",
     description:
       "Agende e publique suas postagens de redes sociais em vários canais simultaneamente.",
-    video: "/videos/1.mp4",
+    video: "/videos/1.webm",
   },
   {
     id: "criacao-ia",
     title: "Criação com IA",
     description:
       "Melhore seu processo de criação de conteúdo com um agente de IA.",
-    video: "/videos/2.mp4",
+    video: "/videos/2.webm",
   },
   {
     id: "analytics",
     title: "Analytics",
     description:
       "Métricas detalhadas de cada canal. Engajamento, alcance e crescimento — tudo em dashboards interativos.",
-    video: "/videos/5.mp4",
+    video: "/videos/5.webm",
   },
   {
     id: "acoes-automaticas",
     title: "Ações automáticas",
     description:
       "O Multipost publicará, curtirá e comentará automaticamente quando você atingir uma meta específica, para que você possa obter o máximo engajamento para o seu conteúdo.",
-    video: "/videos/4.mp4",
+    video: "/videos/4.webm",
+  },
+  {
+    id: "comenta-eu-quero",
+    title: "Estilo Manychat",
+    description:
+      "Crie automação de comentário, o famoso 'Comenta EU QUERO' quando alguém comenta uma palavra-chave, o Multipost responde o comentário e envia a mensagem com botão direto na DM do Instagram.",
+    video: "/videos/comenta-eu-quero.mp4",
+  },
+  {
+    id: "repost",
+    title: "Repost",
+    description:
+      "Republique seus melhores conteúdos com um clique. Reaproveite posts que performaram bem e mantenha seus canais sempre ativos, sem precisar recriar tudo do zero.",
+    video: "/videos/repost.mp4",
   },
   {
     id: "automacao",
     title: "Automação Total",
     description:
       "API pública + webhooks para integrar com n8n, Make ou Zapier. Publique automaticamente com fluxos inteligentes.",
-    video: "/videos/6.mp4",
+    video: "/videos/6.webm",
   },
   {
     id: "equipe",
     title: "Gestão de Equipe",
     description:
       "Multi-tenancy, fluxos de aprovação, permissões por papel. Escale com segurança para agências e times.",
-    video: "/videos/3.mp4",
+    video: "/videos/3.webm",
   },
 ];
 
