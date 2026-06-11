@@ -39,13 +39,14 @@ export default function Hero() {
         }
       );
 
-      // Video reveal: scale up as it enters viewport
+      // Video reveal: subtle scale-up on scroll.
+      // No opacity animation — the poster is the LCP element, so it must paint
+      // at full opacity immediately instead of being pinned at 0.6 until scroll.
       gsap.fromTo(
         videoContainerRef.current,
-        { scale: 0.92, opacity: 0.6 },
+        { scale: 0.92 },
         {
           scale: 1,
-          opacity: 1,
           ease: "none",
           scrollTrigger: {
             trigger: videoContainerRef.current,
@@ -193,7 +194,7 @@ export default function Hero() {
       {/* Video — full width below, gradient fade at bottom */}
       <div
         ref={videoContainerRef}
-        className="hero-entrance hero-entrance-delay-5 relative mt-16 sm:mt-20 will-change-transform"
+        className="relative mt-16 sm:mt-20 will-change-transform"
       >
         {/* Side glows */}
         <div className="pointer-events-none absolute -inset-x-10 top-0 h-[60%] bg-accent/[0.04] blur-[80px]" />
