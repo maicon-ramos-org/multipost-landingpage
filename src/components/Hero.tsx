@@ -1,11 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { smoothScrollTo } from "@/lib/smoothScroll";
-
-gsap.registerPlugin(ScrollTrigger);
 
 
 export default function Hero() {
@@ -21,44 +17,62 @@ export default function Hero() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const ctx = gsap.context(() => {
-      // Text fade out on scroll (bidirectional)
-      gsap.fromTo(
-        [badgeRef.current, headlineRef.current, subtitleRef.current, ctaRef.current],
-        { yPercent: 0, opacity: 1 },
-        {
-          yPercent: -20,
-          opacity: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "40% top",
-            scrub: true,
-          },
-        }
-      );
+    let ctx: { revert: () => void } | null = null;
+    let cancelled = false;
 
-      // Video reveal: subtle scale-up on scroll.
-      // No opacity animation — the poster is the LCP element, so it must paint
-      // at full opacity immediately instead of being pinned at 0.6 until scroll.
-      gsap.fromTo(
-        videoContainerRef.current,
-        { scale: 0.92 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: videoContainerRef.current,
-            start: "top 90%",
-            end: "top 20%",
-            scrub: true,
-          },
-        }
-      );
-    }, section);
+    // Load GSAP off the critical path. These are scroll-only animations that
+    // aren't needed for the first paint, so keeping GSAP out of the initial
+    // bundle lets the hero (LCP element) paint sooner.
+    (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-    return () => ctx.revert();
+      ctx = gsap.context(() => {
+        // Text fade out on scroll (bidirectional)
+        gsap.fromTo(
+          [badgeRef.current, headlineRef.current, subtitleRef.current, ctaRef.current],
+          { yPercent: 0, opacity: 1 },
+          {
+            yPercent: -20,
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "40% top",
+              scrub: true,
+            },
+          }
+        );
+
+        // Video reveal: subtle scale-up on scroll.
+        // No opacity animation — the poster is the LCP element, so it must paint
+        // at full opacity immediately instead of being pinned at 0.6 until scroll.
+        gsap.fromTo(
+          videoContainerRef.current,
+          { scale: 0.92 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: videoContainerRef.current,
+              start: "top 90%",
+              end: "top 20%",
+              scrub: true,
+            },
+          }
+        );
+      }, section);
+    })();
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, []);
 
   // Lazy-play hero video: only loads + plays when in view.

@@ -133,13 +133,47 @@ function captureFbclid(): void {
   }
 }
 
+// --- Client IPv6 discovery (Meta CAPI match quality) ---
+// The Meta Pixel records the browser's IPv6 (facebook.com is dual-stack), while
+// our server only observes IPv4 because the connection to it is IPv4-only (the
+// host has no inbound IPv6 / AAAA record). We discover the user's real public
+// IPv6 from an IPv6-only endpoint and pass it to the server so CAPI's
+// client_ip_address matches what the Pixel reports. IPv4-only users resolve to
+// "" and the server falls back to the IP it sees in the request headers.
+
+let cachedClientIp: string | null = null;
+let clientIpPromise: Promise<string> | null = null;
+
+function fetchClientIpv6(): Promise<string> {
+  if (cachedClientIp !== null) return Promise.resolve(cachedClientIp);
+  if (clientIpPromise) return clientIpPromise;
+
+  clientIpPromise = fetch("https://api6.ipify.org?format=json", {
+    signal: AbortSignal.timeout(3000),
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((body: { ip?: string } | null) => {
+      // Only keep it if it actually looks like an IPv6 address.
+      cachedClientIp = body?.ip?.includes(":") ? body.ip : "";
+      return cachedClientIp;
+    })
+    .catch(() => {
+      cachedClientIp = "";
+      return "";
+    });
+
+  return clientIpPromise;
+}
+
 // --- Event firing ---
 
-function fireServerEvent(
+async function fireServerEvent(
   eventName: string,
   eventId: string,
   data: TrackData
 ) {
+  const clientIpAddress = await fetchClientIpv6();
+
   const payload = {
     event_name: eventName,
     event_id: eventId,
@@ -150,7 +184,7 @@ function fireServerEvent(
       fbp: getCookie("_fbp"),
       fbc: getFbc(),
       client_user_agent: navigator.userAgent,
-      client_ip_address: "",
+      client_ip_address: clientIpAddress,
     },
     custom_data: {
       name: data.name || "",
@@ -223,6 +257,8 @@ export function useTracking(): { track: TrackFunction } {
     if (!ENABLE_TRACKING) return;
 
     captureFbclid();
+    // Warm the IPv6 cache so it's ready before Contact/Lead events fire.
+    fetchClientIpv6();
 
     const stored = loadUserData();
     if (stored.email || stored.phone || stored.name) {

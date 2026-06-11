@@ -1,11 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { smoothScrollTo } from "@/lib/smoothScroll";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { label: "Funcionalidades", href: "#funcionalidades" },
@@ -21,16 +17,13 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const trigger = ScrollTrigger.create({
-      start: "top -40",
-      onUpdate: (self) => {
-        setScrolled(self.scroll() > 40);
-      },
-    });
-
     const navIds = navLinks.map((l) => l.href.replace("#", ""));
 
-    const updateActive = () => {
+    // Native scroll listener (replaces a GSAP ScrollTrigger) so GSAP stays out
+    // of the initial bundle and doesn't block the hero paint.
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+
       const mid = window.scrollY + window.innerHeight * 0.35;
       let current = navIds[0];
       for (const id of navIds) {
@@ -42,13 +35,10 @@ export default function Header() {
       setActiveSection(`#${current}`);
     };
 
-    window.addEventListener("scroll", updateActive, { passive: true });
-    updateActive();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
-    return () => {
-      trigger.kill();
-      window.removeEventListener("scroll", updateActive);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (

@@ -15,24 +15,38 @@ export default function LenisProvider({
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      lerp: 0.1,
-      smoothWheel: true,
-    });
-    lenisRef.current = lenis;
-    // Expose globally so any component can call smooth scrollTo
-    (window as any).__lenis = lenis;
+    let lenis: Lenis | null = null;
+    const raf = (time: number) => {
+      if (lenis) lenis.raf(time * 1000);
+    };
 
-    lenis.on("scroll", ScrollTrigger.update);
+    // Smooth scroll isn't needed for the first paint and its setup is a heavy
+    // main-thread task. Defer it past the LCP window (idle / short timeout) so
+    // it doesn't block painting the hero.
+    const init = () => {
+      lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+      lenisRef.current = lenis;
+      // Expose globally so any component can call smooth scrollTo
+      (window as any).__lenis = lenis;
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(raf);
+      gsap.ticker.lagSmoothing(0);
+    };
+
+    const ric =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(init, { timeout: 800 })
+        : window.setTimeout(init, 300);
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(lenis.raf as any);
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(ric as number);
+      } else {
+        clearTimeout(ric as number);
+      }
+      gsap.ticker.remove(raf);
+      lenis?.destroy();
     };
   }, []);
 

@@ -18,6 +18,11 @@ function getClientIp(request: Request): string {
   return request.headers.get("x-real-ip") || "";
 }
 
+function isIpv6(ip: string): boolean {
+  // Lightweight syntactic check — enough to distinguish IPv6 from IPv4/garbage.
+  return ip.includes(":") && /^[0-9a-fA-F:.]+$/.test(ip);
+}
+
 interface CAPIPayload {
   event_name: string;
   event_id: string;
@@ -68,9 +73,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const ip = getClientIp(request);
   const userData = data.user_data || {};
   const customData = data.custom_data || {};
+
+  // Prefer the IPv6 the browser discovered (matches what the Meta Pixel records);
+  // fall back to the IP observed from request headers (typically IPv4).
+  const headerIp = getClientIp(request);
+  const clientProvidedIp = (userData.client_ip_address || "").trim();
+  const ip = isIpv6(clientProvidedIp) ? clientProvidedIp : headerIp;
 
   // Build hashed user_data for Meta
   const metaUserData: Record<string, unknown> = {};
