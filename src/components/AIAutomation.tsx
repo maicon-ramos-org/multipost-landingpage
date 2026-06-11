@@ -29,9 +29,9 @@ const channels: Channel[] = [
   },
   {
     id: "telegram",
-    label: "Via Telegram",
+    label: "Hermes Agent ou Openclaw",
     description:
-      "Automatize a criação e o agendamento do seu conteúdo direto pelo Telegram, com fluxos simples e instantâneos.",
+      "Conecte e automatize a criação e o agendamento do seu conteúdo direto pelo Telegram usando seu agente de IA preferido, seja Hermes Agent ou Openclaw.",
     video: "/videos/openclaw.webm",
     brand: "#229ED9",
     chrome: "telegram",
@@ -40,7 +40,7 @@ const channels: Channel[] = [
     id: "claude-code",
     label: "Via Claude Code",
     description:
-      "Crie e agende publicações sem sair do seu terminal, usando o Claude Code para orquestrar tudo por comandos.",
+      "Crie e agende publicações usando o Claude Desktop ou Claude Code para orquestrar tudo por comandos.",
     video: "/videos/claude.webm",
     brand: "#cd282b",
     chrome: "terminal",

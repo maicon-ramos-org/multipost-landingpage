@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -19,39 +18,9 @@ export default function Hero() {
 
   useEffect(() => {
     const section = sectionRef.current;
-    const video = videoRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Video scroll-scrub
-      if (video) {
-        video.pause();
-
-        const setupVideoScrub = () => {
-          if (!video.duration) return;
-
-          ScrollTrigger.create({
-            trigger: videoContainerRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 0.5,
-            onUpdate: (self) => {
-              if (video.duration) {
-                video.currentTime = self.progress * video.duration;
-              }
-            },
-          });
-        };
-
-        if (video.readyState >= 1) {
-          setupVideoScrub();
-        } else {
-          video.addEventListener("loadedmetadata", setupVideoScrub, {
-            once: true,
-          });
-        }
-      }
-
       // Text fade out on scroll (bidirectional)
       gsap.fromTo(
         [badgeRef.current, headlineRef.current, subtitleRef.current, ctaRef.current],
@@ -223,12 +192,13 @@ export default function Hero() {
             {/* Video */}
             <div className="aspect-video bg-black">
               <video
-                ref={videoRef}
                 src="/videos/hero-agentic.webm"
+                autoPlay
                 muted
+                loop
                 playsInline
                 aria-hidden="true"
-                preload="metadata"
+                preload="auto"
                 className="h-full w-full object-cover"
               />
             </div>
