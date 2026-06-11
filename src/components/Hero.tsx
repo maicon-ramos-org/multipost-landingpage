@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,27 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
+  // Lazy-play hero video: only loads + plays when in view.
+  // Defers the ~3MB download off the initial (mobile) load and pauses offscreen.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => { });
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       ref={sectionRef}
@@ -71,23 +93,20 @@ export default function Hero() {
 
       {/* Hero content */}
       <div className="relative mx-auto max-w-7xl px-6">
-        {/* Badge */}
+        {/* Badges */}
         <div
           ref={badgeRef}
-          className="hero-entrance hero-entrance-delay-1 mb-6 flex md:inline-flex justify-center md:justify-start items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs text-neutral-300"
+          className="hero-entrance hero-entrance-delay-1 mb-6 flex flex-wrap justify-center md:justify-start items-center gap-2"
         >
-          <svg
-            className="w-3 h-3 text-accent"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
-          </svg>
-          Software Self-hosted
+          {["Self-hosted", "Sem mensalidade"].map((label) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs text-neutral-300"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              {label}
+            </span>
+          ))}
         </div>
 
         {/* Title row: huge title left, CTA bottom-right on desktop; stacked on mobile */}
@@ -97,19 +116,21 @@ export default function Hero() {
             ref={headlineRef}
             className="hero-entrance hero-entrance-delay-2 font-display text-[1.9rem] leading-[1.05] font-extrabold tracking-tight sm:text-5xl lg:text-7xl xl:text-6xl md:max-w-[70%] text-center md:text-left"
           >
-            A FERRAMENTA QUE{" "}
-            <br />
-            <span className="text-accent-gradient">AS AGÊNCIAS USAM</span>
-            <br />
-            AGORA É SUA
+            Conecte suas redes sociais com seus{" "}
+            <br className="md:hidden" />
+            <span className="text-accent-gradient">Agentes de IA</span>
           </h1>
 
           {/* Subtitle — mobile only (between title and CTA) */}
           <p className="hero-entrance hero-entrance-delay-4 md:hidden text-sm leading-relaxed text-neutral-500 text-center">
-            Gestão de redes sociais auto-hospedada para agências, empresas e criadores que desejam controle total.{" "}
-            <span className="text-neutral-300">IA integrada</span>,{" "}
-            <span className="text-neutral-300">+33 canais</span> e{" "}
-            <span className="text-neutral-300">sem limites de planos</span>.
+            <span>A infraestrutura de publicação para a era dos agentes de IA.</span>{" "}
+            Planeje, gere e agende posts com:{" "}
+            <br />
+            <span className="text-neutral-300">Openclaw</span>,{" "}
+            <span className="text-neutral-300">Hermes</span>,{" "}
+            <span className="text-neutral-300">Claude</span>,{" "}
+            <span className="text-neutral-300">ChatGPT</span>,{" "}
+            <span className="text-neutral-300">Codex</span>…
           </p>
 
           {/* CTA */}
@@ -155,12 +176,17 @@ export default function Hero() {
         {/* Subtitle — desktop only, below title row */}
         <p
           ref={subtitleRef}
-          className="hero-entrance hero-entrance-delay-4 hidden md:block mt-6 max-w-xl text-base leading-relaxed text-neutral-500"
+          className="hero-entrance hero-entrance-delay-4 hidden md:block mt-6 max-w-2xl text-base leading-relaxed text-neutral-500"
         >
-          Gestão de redes sociais auto-hospedada para agências, empresas e criadores que desejam controle total. <br></br>{" "}
-          <span className="text-neutral-300">IA integrada</span>,{" "}
-          <span className="text-neutral-300">+33 canais</span> e{" "}
-          <span className="text-neutral-300">sem limites de planos</span>.
+          <span className="text-neutral-200">A infraestrutura perfeita de publicação para a era dos agentes de IA.</span>
+          <br />
+          Planeje, gere e agende posts automaticamente com:{" "}
+          <br />
+          <span className="text-neutral-300">Openclaw</span>,{" "}
+          <span className="text-neutral-300">Hermes</span>,{" "}
+          <span className="text-neutral-300">Claude Code</span>,{" "}
+          <span className="text-neutral-300">ChatGPT</span>,{" "}
+          <span className="text-neutral-300">Codex</span>…
         </p>
       </div>
 
@@ -192,13 +218,14 @@ export default function Hero() {
             {/* Video */}
             <div className="aspect-video bg-black">
               <video
+                ref={videoRef}
                 src="/videos/hero-agentic.webm"
-                autoPlay
+                poster="/images/hero-poster.webp"
                 muted
                 loop
                 playsInline
                 aria-hidden="true"
-                preload="auto"
+                preload="none"
                 className="h-full w-full object-cover"
               />
             </div>
