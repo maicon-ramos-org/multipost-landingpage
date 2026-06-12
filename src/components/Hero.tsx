@@ -236,11 +236,12 @@ export default function Hero() {
                 ref={videoRef}
                 src="/videos/hero-agentic.webm"
                 poster="/images/hero-poster.webp"
+                autoPlay
                 muted
                 loop
                 playsInline
                 aria-hidden="true"
-                preload="none"
+                preload="auto"
                 className="h-full w-full object-cover"
               />
             </div>

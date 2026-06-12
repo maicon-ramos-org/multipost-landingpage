@@ -8,9 +8,10 @@ import {
 } from "@/components/GoogleTagManager";
 import TrackingProvider from "@/components/TrackingProvider";
 
-const LenisProvider = dynamic(() => import("@/components/LenisProvider"), {
-  ssr: false,
-});
+// LenisProvider wraps {children}, so it must NOT disable SSR — otherwise the
+// whole page renders client-only (blank HTML until JS loads). It server-renders
+// children and only runs Lenis in a client effect, so default (ssr: true) is safe.
+const LenisProvider = dynamic(() => import("@/components/LenisProvider"));
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
 });
