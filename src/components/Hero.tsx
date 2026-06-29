@@ -75,25 +75,52 @@ export default function Hero() {
     };
   }, []);
 
-  // Lazy-play hero video: only loads + plays when in view.
-  // Defers the ~3MB download off the initial (mobile) load and pauses offscreen.
+  // Hero video playback. The poster is the LCP element, so we start (and lazily
+  // load, preload="none") the video only AFTER the page has loaded. This keeps
+  // the preloaded poster as the LCP and stops the video download from competing
+  // with critical resources on slow connections. Once started, an observer
+  // pauses it off-screen to save CPU/battery.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => { });
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.2 }
-    );
+    let observer: IntersectionObserver | null = null;
+    let cancelled = false;
 
-    observer.observe(video);
-    return () => observer.disconnect();
+    const begin = () => {
+      if (cancelled) return;
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => { });
+          } else {
+            video.pause();
+          }
+        },
+        { threshold: 0.2 }
+      );
+      observer.observe(video);
+    };
+
+    const schedule = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        window.requestIdleCallback(begin, { timeout: 2000 });
+      } else {
+        window.setTimeout(begin, 800);
+      }
+    };
+
+    if (document.readyState === "complete") {
+      schedule();
+    } else {
+      window.addEventListener("load", schedule, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+      window.removeEventListener("load", schedule);
+    };
   }, []);
 
   return (
@@ -234,14 +261,13 @@ export default function Hero() {
             <div className="aspect-video bg-black">
               <video
                 ref={videoRef}
-                src="/videos/hero-agentic.webm"
+                src="/videos/hero-agentic-v2.webm"
                 poster="/images/hero-poster.webp"
-                autoPlay
                 muted
                 loop
                 playsInline
                 aria-hidden="true"
-                preload="auto"
+                preload="none"
                 className="h-full w-full object-cover"
               />
             </div>

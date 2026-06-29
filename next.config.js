@@ -18,19 +18,16 @@ const nextConfig = {
     ],
   },
   // Long-lived cache for static media in /public (videos, images).
-  // These are stable assets — when you replace a file's *content*, rename it
-  // (or append ?v=2) so returning visitors don't keep the cached version.
+  // IMPORTANT: these filenames are NOT content-hashed, so when you replace a
+  // file's *content* you MUST rename it (e.g. hero-agentic-v2.webm) — otherwise
+  // Vercel's CDN keeps serving the cached old version even after a redeploy.
   async headers() {
+    const cache = [
+      { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+    ];
     return [
-      {
-        source: "/:path*.(webm|mp4|webp|svg|png|jpg|jpeg|avif|woff2)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
+      { source: "/videos/:path*", headers: cache },
+      { source: "/images/:path*", headers: cache },
     ];
   },
 };

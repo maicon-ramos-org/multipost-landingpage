@@ -13,10 +13,7 @@ const FAQ = dynamic(() => import("@/components/FAQ"));
 const Footer = dynamic(() => import("@/components/Footer"));
 const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"));
 const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"));
-const GradFlowBackground = dynamic(
-  () => import("@/components/GradFlowBackground"),
-  { ssr: false }
-);
+const GradFlowBackground = dynamic(() => import("@/components/GradFlowBackground"));
 
 export default function Home() {
   return (

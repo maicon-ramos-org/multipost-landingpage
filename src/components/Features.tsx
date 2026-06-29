@@ -4,8 +4,6 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const features = [
   {
     id: "calendario",
@@ -220,7 +218,7 @@ function VideoItem({
         loop
         aria-hidden="true"
         onLoadedMetadata={handleMetadata}
-        preload={isFirst ? "auto" : "none"}
+        preload="none"
         className="w-full h-full object-cover block"
       />
 
@@ -342,6 +340,7 @@ export default function Features() {
 
   useEffect(() => {
     if (!headingRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
       gsap.fromTo(
         headingRef.current,
